@@ -19,38 +19,6 @@ import random
 from info_nce import InfoNCE
 import open3d as o3d
 
-def val_cal_loss(feature1,feature2,correspondence,config:Config):
-    # feature1 batchsize*num_points*feature_dim
-    # feature2 batchsize*num_points*feature_dim
-    # correspondence batchsize*num_correspondence*2
-    batchsize=feature1.shape[0]
-    num_correspondence=correspondence.shape[1]
-    feature_dim=feature1.shape[2]
-
-    batch_index=torch.arange(batchsize).to(config.train_config.device)
-    #query batchsize*num_correspondence*feature_dim
-    query=torch.stack([feature1[batch_index,correspondence[batch_index,i,0]] for i in range(num_correspondence)],dim=1)
-
-    #positive batchsize*num_correspondence*feature_dim
-    positive=torch.stack([feature2[batch_index,correspondence[batch_index,i,1]] for i in range(num_correspondence)],dim=1)
-
-    #negative index batchsize*num_correspondence*negative_num
-    negative_index=torch.randint(0,feature2.shape[1],(batchsize,num_correspondence,config.train_config.num_negative)).to(config.train_config.device)
-
-    #negative batchsize*num_correspondence*negative_num*feature_dim
-    negative_index=torch.randint(0,num_points,(batchsize,num_correspondence,config.train_config.num_negative))
-    negative=torch.zeros(batchsize,num_correspondence,config.train_config.num_negative,feature_dim).to(config.train_config.device)
-    for i in range(batchsize):
-        for j in range(num_correspondence):
-            for k in range(config.train_config.num_negative):
-                negative[i,j,k]=feature2[i,negative_index[i,j,k]]
-
-    criterion=InfoNCE(negative_mode="paired",temperature=config.train_config.temperature)
-    query=query.reshape(batchsize*num_correspondence,feature_dim)
-    positive=positive.reshape(batchsize*num_correspondence,feature_dim)
-    negative=negative.reshape(batchsize*num_correspondence,config.train_config.num_negative,feature_dim)
-    loss=criterion(query,positive,negative)
-    return loss
 
 
 def normalize(*xs):
@@ -167,40 +135,3 @@ def visualize(pc1,pc2,inference,correspondence):
 
 
 
-if __name__=="__main__":
-    parser=argparse.ArgumentParser()
-    parser.add_argument('--model_path',type=str,default="/home/luhr/correspondence/softgym_cloth/checkpoint/new_naive_train/all_new.pth")
-    parser.add_argument('--data_path',type=str,default="/home/luhr/correspondence/softgym_cloth/cloth3d_train_data")
-
-    args=parser.parse_args()
-    model_path=args.model_path
-    data_path=args.data_path
-
-    config=Config()
-    data=process_dir(data_path)
-    dataset=fileDataset(deform_path=data_path,object_path="/home/luhr/correspondence/softgym_cloth/garmentgym/cloth3d/train",config=config)
-    dataloader=Data.DataLoader(dataset,batch_size=config.train_config.batch_size,shuffle=True,num_workers=4)
-
-    model=basic_model(config.train_config.feature_dim)
-    model.load_state_dict(torch.load(model_path,map_location=config.train_config.device)['model_state_dict'])
-    model.to(config.train_config.device)
-
-    model.eval()
-    total_loss=0    
-    for i,(pc1,pc2,correspondence) in enumerate(dataloader):
-        batchsize=pc1.shape[0]
-        num_points=pc1.shape[1]
-        num_correspondence=correspondence.shape[1]
-
-        pc1=pc1.to(config.train_config.device)
-        pc2=pc2.to(config.train_config.device)
-        correspondence=correspondence.to(config.train_config.device)
-
-        with torch.no_grad():
-            feature1=model(pc1)
-            feature2=model(pc2)
-            loss=val_cal_loss(feature1,feature2,correspondence,config)
-            inference=cal_inference_pair(feature1,feature2,correspondence,config)
-            inference=inference.long()
-            visualize(pc1,pc2,inference,correspondence)
-            print(cal_distance_accuracy(pc1,pc2,inference,correspondence,config))

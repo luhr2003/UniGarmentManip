@@ -21,7 +21,7 @@ import open3d as o3d
 import torch.nn.functional as F
 import pyflex
 from typing import List
-from task.fling.fling_test_start import Task_result
+from garmentgym.garmentgym.base.config import Task_result
 from task.fling.fling_info import Fling_Demo
 from garmentgym.garmentgym.base.config import *
 

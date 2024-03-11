@@ -10,6 +10,7 @@ from tqdm import tqdm
 curpath=os.getcwd()
 sys.path.append(curpath)
 sys.path.append(curpath+'/garmentgym')
+from garmentgym.garmentgym.base.record import cross_Deform_info
 
 def pickle2h5(file_path):
     try:

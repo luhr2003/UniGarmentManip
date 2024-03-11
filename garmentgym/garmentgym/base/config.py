@@ -1,7 +1,22 @@
 from typing import Any
 import numpy as np
 from scipy.spatial.transform import Rotation
-
+class Task_result:
+    def __init__(self,mesh_path:str,task_name:str,store_path:str,model_path:str,log_file:str):
+        self.mesh_path=mesh_path
+        self.task_name=task_name
+        self.store_path=store_path
+        self.model_path=model_path
+        self.log_file=log_file
+        self.mesh_list=sorted(os.listdir(mesh_path))
+        self.total_num=len(self.mesh_list)
+        self.success_num=0
+        self.fail_num=0
+        self.success_rate=0
+        self.current_num=0
+        self.result_dict={}
+    def __str__(self) -> str:
+        return "total_num:{},success_num:{},fail_num:{},success_rate:{}".format(self.total_num,self.success_num,self.fail_num,self.success_rate)
 
 class Config:
     def __init__(self,kwargs:dict=None) -> None:

@@ -22,7 +22,7 @@ import pyflex
 from typing import List
 from garmentgym.garmentgym.base.config import *
 from task.fling.fling_info import Fling_Demo
-from task.fling_fold.fling_fold_start import Task_result
+from garmentgym.garmentgym.base.config import Task_result
 
 device="cuda:0"
 
@@ -304,9 +304,7 @@ if __name__=="__main__":
         pyflex.step()
         env.step_sim_fn()
 
-    env.record_info(4)
     cur_info=env.get_cur_info()
-    corr.get_correspondence(4,flat_info,cur_info)
 
     print("---------------start fold----------------")
     print("info_sequence:",info_sequence)
@@ -317,7 +315,6 @@ if __name__=="__main__":
         print("demo:",demo)
         cur_shape:task_info=env.get_cur_info()
         env.record_info(i+5)
-        corr.get_correspondence(i+5,flat_info,cur_shape)
         #-------------prepare pc--------------
         cur_pc_points=torch.tensor(cur_shape.cur_info.points).float()
         cur_pc_colors=torch.tensor(cur_shape.cur_info.colors).float()
