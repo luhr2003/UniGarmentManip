@@ -17,3 +17,5 @@ garmentgym/PyFlex/bindings/examples/*/
 garmentgym/PyFlex/bindings/examples/*.gif
 
 __pycache__/
+
+.idea
