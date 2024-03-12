@@ -51,3 +51,10 @@ python test.py
 ```
 
 ### Usage
+#### Init the environment
+You need to prepare the environment in terminal by using the following command
+```bash
+. ./prepare.sh
+```
+#### Code structure
+The code structure are as followed
