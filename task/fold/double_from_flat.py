@@ -22,7 +22,7 @@ import open3d as o3d
 import torch.nn.functional as F
 import pyflex
 from typing import List
-from task.fold.double_fold_start import Task_result
+from garmentgym.garmentgym.base.config import Task_result
 from garmentgym.garmentgym.base.record import cross_Deform_info
 
 
@@ -93,10 +93,10 @@ def world_to_pixel_valid(world_point,depth,camera_intrinsics,camera_extrinsics):
 
 if __name__=="__main__":
     parser=argparse.ArgumentParser()
-    parser.add_argument('--task_name', type=str,default="jinteng")
-    parser.add_argument('--demonstration',type=str,default='/home/isaac/correspondence/softgym_cloth/demonstration/complex_trajectory/jinteng_fold2/00044')
-    parser.add_argument('--current_cloth',type=str,default='/home/isaac/correspondence/softgym_cloth/garmentgym/cloth3d/train')
-    parser.add_argument('--model_path',type=str,default='/home/isaac/correspondence/softgym_cloth/checkpoint/nce_train/mix_nce.pth')
+    parser.add_argument('--task_name', type=str,default="simple")
+    parser.add_argument('--demonstration',type=str,default='/home/isaac/correspondence/UniGarmentManip/demonstration/fold/simple_fold2/00044')
+    parser.add_argument('--current_cloth',type=str,default='/home/isaac/correspondence/UniGarmentManip/garmentgym/cloth3d/train')
+    parser.add_argument('--model_path',type=str,default='/home/isaac/correspondence/UniGarmentManip/checkpoint/tops.pth')
     parser.add_argument('--mesh_id',type=str,default='01500')
     parser.add_argument('--log_file', type=str,default="double_fold_from_flat_simple.pkl")
     parser.add_argument('--store_dir',type=str,default="fold_test")
@@ -138,23 +138,12 @@ if __name__=="__main__":
         pyflex.step()
         pyflex.render()
 
-    env.two_hide_end_effectors()    
-    # preare shape for network
-    deform_info=cross_Deform_info()
-    deform_info.add(config=env.config,clothes=env.clothes)
-    deform_info.init()
 
 
     action=[]
-    deform_info.update(action)
 
-    store_path=os.path.join(store_dir,task_name,mesh_id,"{}.pkl".format(len(action)))
-    os.makedirs(os.path.join(store_dir,task_name,mesh_id),exist_ok=True)
-    with open(store_path,"wb") as f:
-        pickle.dump(deform_info,f)
 
     for i in range(len(info_sequence)-1):
-        print(i)
         demo=info_sequence[i]
         cur_shape:task_info=env.get_cur_info()
         #-------------prepare pc--------------
@@ -228,13 +217,6 @@ if __name__=="__main__":
         
         #-------------execute action--------------
         env.execute_action([action_function,action_world])
-        action.append([action_function,action_world])
-        deform_info.update(action)
-
-        store_path=os.path.join(store_dir,task_name,mesh_id,"{}.pkl".format(len(action)))
-        os.makedirs(os.path.join(store_dir,task_name,mesh_id),exist_ok=True)
-        with open(store_path,"wb") as f:
-            pickle.dump(deform_info,f)
 
 
 
@@ -243,7 +225,6 @@ if __name__=="__main__":
     #-------------check success--------------
     result=env.check_success(type=task_name)
     print("fold result:",result)
-    env.record_info()
 
     #-------------save result--------------
     log_file_path=os.path.join(store_dir,log_file)
@@ -260,30 +241,7 @@ if __name__=="__main__":
     with open(log_file_path,"wb") as f:
         pickle.dump(task_result,f)
         
-        
-        
-        # -------------visualize-------------
-        # visualize
-        # if i == 1:
-        #     pcd1=o3d.geometry.PointCloud()
-        #     points1=demo_pc_ready[0][:,:3].cpu().numpy().reshape(-1,3)
-        #     colors1=demo_pc_ready[0][:,3:].cpu().numpy().reshape(-1,3)
-        #     points1[:,0]-=0.5
-        #     pcd1.points=o3d.utility.Vector3dVector(points1)
-        #     pcd1.colors=o3d.utility.Vector3dVector(colors1)
-        #     pcd2=o3d.geometry.PointCloud()
-        #     points2=cur_pc_ready[0][:,:3].cpu().numpy().reshape(-1,3)
-        #     colors2=cur_pc_ready[0][:,3:].cpu().numpy().reshape(-1,3)
-        #     points2[:,0]+=0.5
-        #     pcd2.points=o3d.utility.Vector3dVector(points2)
-        #     pcd2.colors=o3d.utility.Vector3dVector(colors2)
-        #     inference_correspondence=[]
-        #     for i in range(len(action_id)):
-        #         inference_correspondence.append([action_id[i],cur_pcd[i]])
-            
-        #     inference_corr=o3d.geometry.LineSet().create_from_point_cloud_correspondences(pcd1,pcd2,inference_correspondence)
-        #     inference_corr.colors=o3d.utility.Vector3dVector(np.tile(np.array([0,0,1]),(len(inference_correspondence),1)))
-        #     o3d.visualization.draw_geometries([pcd1,pcd2,inference_corr])
+       
 
 
 

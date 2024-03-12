@@ -242,14 +242,14 @@ class FlingEnv(ClothesEnv):
 
         # execute action
         self.set_grasp([False, False])
-        self.two_movep([prepick_pos1, prepick_pos2], speed=8e-2)  # 修改此处
-        self.two_movep([pick_pos1, pick_pos2], speed=3e-2)  # 修改此处
+        self.two_movep([prepick_pos1, prepick_pos2], speed=8e-2)  
+        self.two_movep([pick_pos1, pick_pos2], speed=3e-2)  
         self.set_grasp([True, False])
-        self.two_movep([prepick_pos1, prepick_pos2], speed=2e-2)  # 修改此处
-        self.two_movep([preplace_pos1, preplace_pos2], speed=2e-2)  # 修改此处
-        self.two_movep([place_pos1, place_pos2], speed=2e-2)  # 修改此处
+        self.two_movep([prepick_pos1, prepick_pos2], speed=2e-2)  # modify here
+        self.two_movep([preplace_pos1, preplace_pos2], speed=2e-2)  # modify here
+        self.two_movep([place_pos1, place_pos2], speed=2e-2)  # modify here
         self.set_grasp([False, False])
-        self.two_movep([preplace_pos1, preplace_pos2], speed=8e-2)  # 修改此处
+        self.two_movep([preplace_pos1, preplace_pos2], speed=8e-2)  # modify here
         self.two_hide_end_effectors()
         
     
@@ -356,7 +356,6 @@ class FlingEnv(ClothesEnv):
         #lift up cloth
         self.fling_movep([[left_grasp_pos[0], PRE_FLING_HEIGHT, left_grasp_pos[2]],\
              [right_grasp_pos[0], PRE_FLING_HEIGHT, right_grasp_pos[2]]], speed=0.05)
-        print("fling step1")
 
         for j in range(50):
             self.step_sim_fn()
@@ -375,7 +374,6 @@ class FlingEnv(ClothesEnv):
         # lift to prefling
         self.fling_movep([[left_grasp_pos[0]+0.1, PRE_FLING_HEIGHT, left_grasp_pos[2]+0.8],\
              [right_grasp_pos[0]-0.1, PRE_FLING_HEIGHT, right_grasp_pos[2]+0.8]], speed=0.08)
-        print("fling step2")
         
         for j in range(100):
             self.step_sim_fn()
@@ -626,54 +624,5 @@ class FlingEnv(ClothesEnv):
 
     def check_success(self,limit):
         cur_area=self.compute_coverage()
-        if cur_area/env.clothes.init_coverage>limit:
+        if cur_area/self.clothes.init_coverage>limit:
             return True
-
-
-if __name__=="__main__":
-    # #change mesh_category path to your own path
-    # #change id to demo shirt id
-    # config=Config()
-    # env=FlingEnv(mesh_category_path="/home/isaac/correspondence/softgym_cloth/garmentgym/cloth3d/train",gui=True,store_path="./",id="00044",config=config)
-
-    # for j in range(100):
-    #     pyflex.step()
-    #     pyflex.render()
-        
-    
-    
-    # flat_pos=pyflex.get_positions().reshape(-1,4)
-    
-    # initial_area = env.compute_coverage()
-    # print(initial_area)
-    
-    # env.update_camera(0)
-    
-    
-    # fling_points=[]
-    # fling_points.append([flat_pos[env.clothes.left_shoulder],flat_pos[env.clothes.right_shoulder]])
-    # fling_points.append([flat_pos[env.clothes.bottom_left],flat_pos[env.clothes.bottom_right]])
-    # fling_points.append([flat_pos[env.clothes.top_left],flat_pos[env.clothes.top_right]])
-    
-    # env.pick_and_fling_primitive(fling_points[0][0],fling_points[0][1])
-    
-    # final_area =env.compute_coverage()
-    # print(final_area)
-    
-    # print(final_area/initial_area)
-    
-    # #env.pick_and_fling_primitive(fling_points[0][0],fling_points[0][1])
-    # #env.pick_and_fling_primitive(fling_points[1][0],fling_points[1][1])
-    # #env.pick_and_fling_primitive(fling_points[2][0],fling_points[2][1])
-    config=Config()
-    env=FlingEnv(mesh_category_path="/home/isaac/correspondence/softgym_cloth/garmentgym/cloth3d/train",gui=True,store_path="./",id="00037",config=config)
-    env.update_camera(0)
-    for j in range(500):
-        env.step_sim_fn()
-    cur_pos=pyflex.get_positions().reshape(-1,4)[:,:3]
-    cloth_pos=cur_pos[:env.clothes.mesh.num_particles]
-    cloth_pos=np.array(cloth_pos)
-    top_left=cloth_pos[env.clothes.left_shoulder][:3].copy()
-    top_right=cloth_pos[env.clothes.right_shoulder][:3].copy()
-    env.pick_and_fling_primitive_new(top_left,top_right)
-    

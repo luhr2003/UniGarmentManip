@@ -21,7 +21,7 @@ import open3d as o3d
 import torch.nn.functional as F
 import pyflex
 from typing import List
-from task.fold.fold_start import Task_result
+from garmentgym.garmentgym.base.config import Task_result
 
 
 
@@ -91,13 +91,13 @@ def world_to_pixel_valid(world_point,depth,camera_intrinsics,camera_extrinsics):
 
 if __name__=="__main__":
     parser=argparse.ArgumentParser()
-    parser.add_argument("--task_name",type=str,default="left_right")
-    parser.add_argument('--demonstration',type=str,default='/home/luhr/correspondence/softgym_cloth/demonstration/complex_trajectory/left_right_fold/00044')
-    parser.add_argument('--current_cloth',type=str,default='/home/luhr/correspondence/softgym_cloth/garmentgym/cloth3d/train')
-    parser.add_argument('--model_path',type=str,default='/home/luhr/correspondence/softgym_cloth/checkpoint/nce_train/mix_nce.pth')
-    parser.add_argument('--mesh_id',type=str,default='00037')
-    parser.add_argument('--store_dir',type=str,default="hang_test")
-    parser.add_argument("--log_file",type=str,default="hang_test/log.json")
+    parser.add_argument('--task_name', type=str,default="simple")
+    parser.add_argument('--demonstration',type=str,default='/home/isaac/correspondence/UniGarmentManip/demonstration/fold/simple_fold/00044')
+    parser.add_argument('--current_cloth',type=str,default='/home/isaac/correspondence/UniGarmentManip/garmentgym/cloth3d/train')
+    parser.add_argument('--model_path',type=str,default='/home/isaac/correspondence/UniGarmentManip/checkpoint/tops.pth')
+    parser.add_argument('--mesh_id',type=str,default='01500')
+    parser.add_argument('--log_file', type=str,default="single_fold_from_flat_simple.pkl")
+    parser.add_argument('--store_dir',type=str,default="fold_test")
     parser.add_argument("--device",type=str,default="cuda:0")
     args=parser.parse_args()
     task_name=args.task_name
@@ -233,31 +233,3 @@ if __name__=="__main__":
     print(task_result)
     with open(log_file_path,"wb") as f:
         pickle.dump(task_result,f)
-        #-------------visualize-------------
-        #visualize
-        # if i == 1:
-        #     pcd1=o3d.geometry.PointCloud()
-        #     points1=demo_pc_ready[0][:,:3].cpu().numpy().reshape(-1,3)
-        #     colors1=demo_pc_ready[0][:,3:].cpu().numpy().reshape(-1,3)
-        #     points1[:,0]-=0.5
-        #     pcd1.points=o3d.utility.Vector3dVector(points1)
-        #     pcd1.colors=o3d.utility.Vector3dVector(colors1)
-        #     pcd2=o3d.geometry.PointCloud()
-        #     points2=cur_pc_ready[0][:,:3].cpu().numpy().reshape(-1,3)
-        #     colors2=cur_pc_ready[0][:,3:].cpu().numpy().reshape(-1,3)
-        #     points2[:,0]+=0.5
-        #     pcd2.points=o3d.utility.Vector3dVector(points2)
-        #     pcd2.colors=o3d.utility.Vector3dVector(colors2)
-        #     inference_correspondence=[]
-        #     for i in range(len(action_id)):
-        #         inference_correspondence.append([action_id[i],cur_pcd[i]])
-            
-        #     inference_corr=o3d.geometry.LineSet().create_from_point_cloud_correspondences(pcd1,pcd2,inference_correspondence)
-        #     inference_corr.colors=o3d.utility.Vector3dVector(np.tile(np.array([0,0,1]),(len(inference_correspondence),1)))
-        #     o3d.visualization.draw_geometries([pcd1,pcd2,inference_corr])
-
-
-
-
-    
-

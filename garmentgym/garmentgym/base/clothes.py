@@ -68,8 +68,7 @@ class Clothes:
                 self.id=int(self.path.split('/')[-2])
             else:
                 self.path = os.path.join(mesh_category_path,str(self.id))
-                print(self.path)
-                print(os.listdir(self.path))
+                print("load mesh from: ",self.path)
                 self.path=str(list(Path(self.path).rglob('*processed.obj'))[0])
         
         return clothes_mesh(path=self.path,name=self.name,need_urs=self.need_urs)

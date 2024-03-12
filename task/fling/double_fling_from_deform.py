@@ -289,40 +289,6 @@ if __name__=="__main__":
     
         
 
-        
-        
-        
-        
-        
-        # # -------------visualize-------------
-        # # visualize
-        # if i == 1:
-        #     pcd1=o3d.geometry.PointCloud()
-        #     points1=flat_pc_ready[0][:,:3].cpu().numpy().reshape(-1,3)
-        #     colors1=flat_pc_ready[0][:,3:].cpu().numpy().reshape(-1,3)
-        #     points1[:,0]-=0.5
-        #     pcd1.points=o3d.utility.Vector3dVector(points1)
-        #     pcd1.colors=o3d.utility.Vector3dVector(colors1)
-        #     pcd2=o3d.geometry.PointCloud()
-        #     points2=cur_pc_ready[0][:,:3].cpu().numpy().reshape(-1,3)
-        #     colors2=cur_pc_ready[0][:,3:].cpu().numpy().reshape(-1,3)
-        #     points2[:,0]+=0.5
-        #     pcd2.points=o3d.utility.Vector3dVector(points2)
-        #     pcd2.colors=o3d.utility.Vector3dVector(colors2)
-        #     inference_correspondence=[]
-        #     inference_correspondence.append([left_shoulder_id,cur_left_shoulder_pcd_id])
-        #     inference_correspondence.append([right_shoulder_id,cur_right_shoulder_pcd_id])
-        #     inference_correspondence.append([left_sleeve_id,cur_left_sleeve_pcd_id])
-        #     inference_correspondence.append([right_sleeve_id,cur_right_sleeve_pcd_id])
-        #     inference_correspondence.append([left_bottom_id,cur_left_bottom_pcd_id])
-        #     inference_correspondence.append([right_bottom_id,cur_right_bottom_pcd_id])
-
-
-
-            
-        #     inference_corr=o3d.geometry.LineSet().create_from_point_cloud_correspondences(pcd1,pcd2,inference_correspondence)
-        #     inference_corr.colors=o3d.utility.Vector3dVector(np.tile(np.array([0,0,1]),(len(inference_correspondence),1)))
-        #     o3d.visualization.draw_geometries([pcd1,pcd2,inference_corr])
 
 
 

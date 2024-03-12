@@ -184,18 +184,18 @@ class BimanualHangEnv(ClothesHangEnv):
 
         # execute action
         self.set_grasp([False, False])
-        self.two_movep([prepick_pos1, prepick_pos2], speed=1e-2)  # 修改此处
-        self.two_movep([pick_pos1, pick_pos2], speed=1e-2)  # 修改此处
+        self.two_movep([prepick_pos1, prepick_pos2], speed=1e-2)  # modify here
+        self.two_movep([pick_pos1, pick_pos2], speed=1e-2)  # modify here
         self.set_grasp([True, True])
-        self.two_movep([prepick_pos1, prepick_pos2], speed=1e-2)  # 修改此处
-        self.two_movep([premid_pos1,premid_pos2], speed=1e-2)  # 修改此处
-        self.two_movep([mid_pos1,mid_pos2], speed=1e-2)  # 修改此处
-        self.two_movep([premid_pos1,premid_pos2], speed=1e-2)  # 修改此处
+        self.two_movep([prepick_pos1, prepick_pos2], speed=1e-2)  # modify here
+        self.two_movep([premid_pos1,premid_pos2], speed=1e-2)  # modify here
+        self.two_movep([mid_pos1,mid_pos2], speed=1e-2)  # modify here
+        self.two_movep([premid_pos1,premid_pos2], speed=1e-2)  # modify here
         
-        self.two_movep([preplace_pos1, preplace_pos2], speed=1e-2)  # 修改此处
-        self.two_movep([place_pos1, place_pos2], speed=1e-2)  # 修改此处
+        self.two_movep([preplace_pos1, preplace_pos2], speed=1e-2)  # modify here
+        self.two_movep([place_pos1, place_pos2], speed=1e-2)  # modify here
         self.set_grasp([False, False])
-        self.two_movep([preplace_pos1, preplace_pos2], speed=1e-2)  # 修改此处
+        self.two_movep([preplace_pos1, preplace_pos2], speed=1e-2)  # modify here
         self.two_hide_end_effectors()
     
     
@@ -261,15 +261,15 @@ class BimanualHangEnv(ClothesHangEnv):
 
         # execute action
         self.set_grasp([False, False])
-        self.two_movep([prepick_pos1, prepick_pos2], speed=8e-2)  # 修改此处
-        self.two_movep([pick_pos1, pick_pos2], speed=8e-2)  # 修改此处
+        self.two_movep([prepick_pos1, prepick_pos2], speed=8e-2)  # modify here
+        self.two_movep([pick_pos1, pick_pos2], speed=8e-2)  # modify here
         self.set_grasp([True, True])
-        self.two_movep([prepick_pos1, prepick_pos2], speed=1e-2)  # 修改此处
-        self.two_movep([preplace_pos1, preplace_pos2], speed=1e-2)  # 修改此处
-        self.two_movep([place_pos1, place_pos2], speed=1e-2)  # 修改此处
+        self.two_movep([prepick_pos1, prepick_pos2], speed=1e-2)  # modify here
+        self.two_movep([preplace_pos1, preplace_pos2], speed=1e-2)  # modify here
+        self.two_movep([place_pos1, place_pos2], speed=1e-2)  # modify here
         self.set_grasp([False, False])
         self.two_hide_end_effectors()
-        # self.two_movep([preplace_pos1, preplace_pos2], speed=1e-2)  # 修改此处
+        # self.two_movep([preplace_pos1, preplace_pos2], speed=1e-2)  # modify here
         # self.two_hide_end_effectors()
     
     def two_pick_and_place_hold(self, p1_s, p1_e, p2_s,p2_e,lift_height=0.4,down_height=0.03):
@@ -294,19 +294,19 @@ class BimanualHangEnv(ClothesHangEnv):
         # execute action
         self.set_grasp([False, False])
         self.step_sim_fn()
-        self.two_movep([prepick_pos1, prepick_pos2], speed=8e-2)  # 修改此处
+        self.two_movep([prepick_pos1, prepick_pos2], speed=8e-2)  # modify here
         self.step_sim_fn()
-        self.two_movep([pick_pos1, pick_pos2], speed=8e-2)  # 修改此处
+        self.two_movep([pick_pos1, pick_pos2], speed=8e-2)  # modify here
         self.set_grasp([True, True])
-        self.two_movep([prepick_pos1, prepick_pos2], speed=1e-2)  # 修改此处
+        self.two_movep([prepick_pos1, prepick_pos2], speed=1e-2)  # modify here
         self.step_sim_fn()
-        self.two_movep([preplace_pos1, preplace_pos2], speed=1e-2)  # 修改此处
+        self.two_movep([preplace_pos1, preplace_pos2], speed=1e-2)  # modify here
         self.step_sim_fn()
-        self.two_movep([place_pos1, place_pos2], speed=1e-2)  # 修改此处
+        self.two_movep([place_pos1, place_pos2], speed=1e-2)  # modify here
         self.step_sim_fn()
         # self.set_grasp([False, False])
         # self.two_hide_end_effectors()
-        # self.two_movep([preplace_pos1, preplace_pos2], speed=1e-2)  # 修改此处
+        # self.two_movep([preplace_pos1, preplace_pos2], speed=1e-2)  # modify here
         # self.two_hide_end_effectors()
         
 
@@ -321,7 +321,7 @@ class BimanualHangEnv(ClothesHangEnv):
         # execute action
         self.set_grasp([True, True])
         self.step_sim_fn()
-        self.two_movep([place_pos1, place_pos2], speed=2e-2)  # 修改此处
+        self.two_movep([place_pos1, place_pos2], speed=2e-2)  # modify here
         self.step_sim_fn()
         self.set_grasp([False, False])
         self.two_hide_end_effectors()

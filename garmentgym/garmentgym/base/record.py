@@ -299,7 +299,6 @@ class task_info():
         self.action=action
         self.basic_info.manipulate_time=len(self.action)
         self.clothes.update_info()
-        print("update",self.cur_info.depth.max())
     
     def init(self):
         self.basic_info.manipulate_time=0

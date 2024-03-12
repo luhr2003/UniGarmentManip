@@ -29,7 +29,7 @@ task_config = {"task_config": {
     'action_mode': 'pickerpickplace',
     'num_picker': 1,
     'render': True,
-    'headless': True,
+    'headless': False,
     'horizon': 100,
     'action_repeat': 8,
     'render_mode': 'cloth',

@@ -14,7 +14,6 @@ sys.path.append(os.path.join(curpath,'garmentgym'))
 sys.path.append(curpath+'/train')
 import torch
 from train.model.basic_pn import basic_model
-from train.model.black_pn import Black_model
 import argparse
 from  garmentgym.garmentgym.base.record import task_info
 from garmentgym.garmentgym.env.fling_hang import FlingHangEnv
@@ -23,7 +22,7 @@ import torch.nn.functional as F
 import pyflex
 from typing import List
 from garmentgym.garmentgym.base.config import *
-from task.fling_hang.fling_hang_start import Task_result
+from garmentgym.garmentgym.base.config import Task_result
 from task.fling.fling_info import Fling_Demo
 
 class Fling_process:
@@ -53,7 +52,6 @@ class Fling_process:
     
     def start_fling(self):
         for i in range(3):
-            env.record_info()
             cur_info=env.get_cur_info()
             cur_pc_points=np.array(cur_info.cur_info.points)
             cur_pc_colors=np.array(cur_info.cur_info.colors)
@@ -235,9 +233,9 @@ def world_to_pixel_valid(world_point,depth,camera_intrinsics,camera_extrinsics):
 
 if __name__=="__main__":
     parser=argparse.ArgumentParser()
-    parser.add_argument('--demonstration',type=str,default='/home/vipuser/correspondence/softgym_cloth/demonstration/hang_trajectory/double/00044')
-    parser.add_argument('--current_cloth',type=str,default='/home/vipuser/correspondence/softgym_cloth/garmentgym/cloth3d/train/')
-    parser.add_argument('--model_path',type=str,default='/home/vipuser/correspondence/softgym_cloth/checkpoint/black_train/nce_train/tshirt.pth')
+    parser.add_argument('--demonstration',type=str,default='/home/isaac/correspondence/UniGarmentManip/demonstration/hang/double/00044')
+    parser.add_argument('--current_cloth',type=str,default='/home/isaac/correspondence/UniGarmentManip/garmentgym/cloth3d/train/')
+    parser.add_argument('--model_path',type=str,default='/home/isaac/correspondence/UniGarmentManip/checkpoint/tops.pth')
     parser.add_argument('--store_path',type=str,default="fling_hang_test")
     parser.add_argument('--mesh_id',type=str,default="00037")
     parser.add_argument("--log_file",type=str,default="fling_hang_test/log.json")
@@ -255,7 +253,7 @@ if __name__=="__main__":
 
     print("---------------load model----------------")
     # load model
-    model=Black_model(512).cuda()
+    model=basic_model(512).cuda()
     model.load_state_dict(torch.load(model_path,map_location="cuda:0")["model_state_dict"])
     print('load model from {}'.format(model_path))
     model.eval()
@@ -283,11 +281,11 @@ if __name__=="__main__":
     flat_info:task_info=env.get_cur_info()
     print("---------------start deform----------------")
     var=0.3
-    # env.move_sleeve(var)
-    # env.move_bottom(var)
-    # env.move_left_right(var)
-    # env.move_top_bottom(var)
-    env.throw_down()
+    env.move_sleeve(var)
+    env.move_bottom(var)
+    env.move_left_right(var)
+    env.move_top_bottom(var)
+    # env.throw_down()
     
 
     for j in range(50):
@@ -296,7 +294,7 @@ if __name__=="__main__":
 
     print("---------------start fling----------------")
     # start fling
-    process=Fling_process(model,"/home/vipuser/correspondence/softgym_cloth/task/fling/00044.pkl",env)
+    process=Fling_process(model,"/home/isaac/correspondence/softgym_cloth/task/fling/00044.pkl",env)
     process.start_fling()
     center_object()
 
@@ -377,7 +375,7 @@ if __name__=="__main__":
         
         
         #-------------execute action--------------
-        # env.update_camera(1)
+        env.update_camera(1)
         env.execute_action([action_function,action_world])
         
         for j in range(100):
@@ -386,7 +384,6 @@ if __name__=="__main__":
         
         hang_result=env.check_hang()
         print("hang result",hang_result)
-        # env.record_info()
         #-------------save result--------------
         log_file_path=os.path.join(store_path,log_file)
         with open(log_file_path,"rb") as f:

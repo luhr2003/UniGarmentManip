@@ -21,7 +21,7 @@ import open3d as o3d
 import torch.nn.functional as F
 import pyflex
 from typing import List
-from task.hanging.double_hang_start import Task_result
+from garmentgym.garmentgym.base.config import Task_result
 
 
 
@@ -92,12 +92,13 @@ def world_to_pixel_valid(world_point,depth,camera_intrinsics,camera_extrinsics):
 
 if __name__=="__main__":
     parser=argparse.ArgumentParser()
-    parser.add_argument('--demonstration',type=str,default='/home/luhr/correspondence/softgym_cloth/demonstration/hang_trajectory/double/00044')
-    parser.add_argument('--current_cloth',type=str,default='/home/luhr/correspondence/softgym_cloth/garmentgym/cloth3d/train/')
-    parser.add_argument('--model_path',type=str,default='/home/luhr/correspondence/softgym_cloth/checkpoint/nce_train/mix_nce.pth')
+    parser.add_argument('--task_name', type=str,default="simple")
+    parser.add_argument('--demonstration',type=str,default='/home/isaac/correspondence/UniGarmentManip/demonstration/hang/double/00044')
+    parser.add_argument('--current_cloth',type=str,default='/home/isaac/correspondence/UniGarmentManip/garmentgym/cloth3d/train')
+    parser.add_argument('--model_path',type=str,default='/home/isaac/correspondence/UniGarmentManip/checkpoint/tops.pth')
+    parser.add_argument('--mesh_id',type=str,default='01500')
+    parser.add_argument('--log_file', type=str,default="double_hang_from_flat.pkl")
     parser.add_argument('--store_dir',type=str,default="hang_test")
-    parser.add_argument('--mesh_id',type=str,default="00037")
-    parser.add_argument("--log_file",type=str,default="hang_test/log.json")
     parser.add_argument("--device",type=str,default="cuda:0")
 
     args=parser.parse_args()
@@ -220,7 +221,6 @@ if __name__=="__main__":
 
         hang_result=env.check_hang()
         print("hang result",hang_result)
-        env.record_info()
         #-------------save result--------------
         log_file_path=os.path.join(store_dir,log_file)
         with open(log_file_path,"rb") as f:

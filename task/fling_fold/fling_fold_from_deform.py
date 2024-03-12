@@ -119,7 +119,6 @@ class Fling_process:
     
     def start_fling(self):
         for i in range(3):
-            env.record_info(0)
             cur_info=env.get_cur_info()
 
             cur_pc_points=np.array(cur_info.cur_info.points)
@@ -194,28 +193,24 @@ class Fling_process:
 
             # env.update_camera(1)
             if shoulder_pair_score>sleeve_pair_score and shoulder_pair_score>bottom_pair_score and shoulder_pair_score>sleeve_middle_pair_score:
-                env.get_heatmap(i+1,cur_pc_ready,[cur_left_shoulder_pcd_id,cur_right_shoulder_pcd_id])
                 env.pick_and_fling_primitive_new(cur_left_shoulder_world,cur_right_shoulder_world)
                 print("shoulder")
                 self.pick_point="shoulder"
             elif sleeve_pair_score>shoulder_pair_score and sleeve_pair_score>bottom_pair_score and sleeve_pair_score>sleeve_middle_pair_score:
-                env.get_heatmap(i+1,cur_pc_ready,[cur_left_sleeve_pcd_id,cur_right_sleeve_pcd_id])
                 env.pick_and_fling_primitive_new(cur_left_sleeve_world,cur_right_sleeve_world)
                 print("sleeve")
                 self.pick_point="sleeve"
             elif bottom_pair_score>shoulder_pair_score and bottom_pair_score>sleeve_pair_score and bottom_pair_score>sleeve_middle_pair_score:
-                env.get_heatmap(i+1,cur_pc_ready,[cur_left_bottom_pcd_id,cur_right_bottom_pcd_id])
                 env.pick_and_fling_primitive_bottom(cur_left_bottom_world,cur_right_bottom_world)
                 print("bottom")
                 self.pick_point="bottom"
             else:
                 env.pick_and_fling_primitive_new(cur_left_sleeve_middle_world,cur_right_sleeve_middle_world)
-                env.get_heatmap(i+1,cur_pc_ready,[cur_left_sleeve_middle_pcd_id,cur_right_sleeve_middle_pcd_id])
                 print("middle")
                 self.pick_point="middle"
 
             cur_area=env.compute_coverage()
-            if cur_area/env.clothes.init_coverage>0.9:
+            if cur_area/env.clothes.init_coverage>0.8:
                 break
         
         
@@ -224,10 +219,11 @@ class Fling_process:
 
 if __name__=="__main__":
     parser=argparse.ArgumentParser()
-    parser.add_argument('--task_name', type=str,default="jinteng")
+    parser.add_argument('--task_name', type=str,default="simple")
     parser.add_argument('--demonstration',type=str,default='/home/isaac/correspondence/UniGarmentManip/demonstration/fold/simple_fold2/00044')
-    parser.add_argument('--current_cloth',type=str,default='/home/isaac/correspondence/softgym_cloth/garmentgym/cloth3d/train/')
-    parser.add_argument('--id',type=str,default='03313')
+    parser.add_argument("--fling_demonstration",type=str,default="/home/isaac/correspondence/UniGarmentManip/demonstration/fling/00044.pkl")
+    parser.add_argument('--current_cloth',type=str,default='/home/isaac/correspondence/UniGarmentManip/garmentgym/cloth3d/train/')
+    parser.add_argument('--id',type=str,default='00037')
     parser.add_argument('--model_path',type=str,default='/home/isaac/correspondence/UniGarmentManip/checkpoint/tops.pth')
     parser.add_argument('--store_path',type=str,default='./flingfold_tshirt')
     parser.add_argument('--log_file', type=str,default="fling_fold_simple.pkl")
@@ -237,6 +233,7 @@ if __name__=="__main__":
     demonstration=args.demonstration
     current_cloth=args.current_cloth
     model_path=args.model_path
+    fling_demonstration=args.fling_demonstration
     id=args.id
     log_file=args.log_file
     task_name=args.task_name
@@ -277,15 +274,14 @@ if __name__=="__main__":
         env.step_sim_fn()
 
     
-    env.record_info(0)
     flat_info=env.get_cur_info()
 
     print("---------------start deform----------------")
     var=0.4
-    # env.move_sleeve(var)
-    # env.move_bottom(var)
-    # env.move_left_right(var)
-    # env.move_left_right()
+    env.move_sleeve(var)
+    env.move_bottom(var)
+    env.move_left_right(var)
+
     
 
 
@@ -293,12 +289,11 @@ if __name__=="__main__":
         pyflex.step()
         env.step_sim_fn()
     
-    env.record_info(0)
     #env.update_camera(2)
 
     print("---------------start fling----------------")
     # start fling
-    process=Fling_process(model,"/home/isaac/correspondence/softgym_cloth/task/fling/00044.pkl",env)
+    process=Fling_process(model,fling_demonstration,env)
     process.start_fling()
     for j in range(20):
         pyflex.step()
@@ -307,14 +302,11 @@ if __name__=="__main__":
     cur_info=env.get_cur_info()
 
     print("---------------start fold----------------")
-    print("info_sequence:",info_sequence)
     print("len(info_sequence):",len(info_sequence))
     
     for i in range(len(info_sequence)-1):
         demo=info_sequence[i]
-        print("demo:",demo)
         cur_shape:task_info=env.get_cur_info()
-        env.record_info(i+5)
         #-------------prepare pc--------------
         cur_pc_points=torch.tensor(cur_shape.cur_info.points).float()
         cur_pc_colors=torch.tensor(cur_shape.cur_info.colors).float()
@@ -384,11 +376,9 @@ if __name__=="__main__":
             cur_world=pixel_to_world(action_rgbd,cur_pc[cur_pcd_id,2],cur_shape.config.get_camera_matrix()[0],cur_shape.config.get_camera_matrix()[1])
             action_world.append(cur_world)
         
-        env.get_heatmap(i+3,cur_pc_ready,[cur_pcd[0],cur_pcd[1],cur_pcd[2],cur_pcd[3]])
         #-------------execute action--------------
         # env.update_camera(1)
         print("action:",action_function)
-        env.record_info(5)
         env.execute_action([action_function,action_world])
         
         for j in range(50):
@@ -400,7 +390,6 @@ if __name__=="__main__":
     #-------------check success--------------
     result=env.check_success(type=task_name)
     print("fold result:",result)
-    env.record_info(10)
     env.export_image()
     #-------------save result--------------
     log_file_path=os.path.join(store_path,log_file)
