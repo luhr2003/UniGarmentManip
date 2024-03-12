@@ -58,3 +58,11 @@ You need to prepare the environment in terminal by using the following command
 ```
 #### Code structure
 The code structure are as followed
+```
+    garmentgym/             # The garment manipulation simulator
+    garmentgym/base         # You can change the parameters of the simulation environment here
+    garmentgym/envs         # The code for garment manipulation tasks environment
+    garmentgym/utils        # The code for garmentgym utility functions
+    Pyflex/                 # The pyflex simulator
+    Pyflex/bindings         # The pyflex bindings in import mesh
+``` 
