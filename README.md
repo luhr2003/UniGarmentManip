@@ -27,4 +27,4 @@ This repository provides data and code as follows.
     collect/                # The code for collecting data
     demonstration/          # The code for one-shot demonstration
 ```
-You can follow the readme in each folder to install and run the code.
+You can follow the README in EACH FOLDER to install and run the code.
