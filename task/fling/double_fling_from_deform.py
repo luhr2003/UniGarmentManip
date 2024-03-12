@@ -195,11 +195,11 @@ def pcd_to_pixel(pcd,camera_intrinsics):
 if __name__=="__main__":
     parser=argparse.ArgumentParser()
     parser.add_argument('--current_cloth',type=str,default='/home/isaac/correspondence/softgym_cloth/garmentgym/cloth3d/train')
-    parser.add_argument('--model_path',type=str,default='/home/isaac/correspondence/UniGarmentManip/checkpoint/tops.pth')
+    parser.add_argument('--model_path',type=str,default='./UniGarmentManip/checkpoint/tops.pth')
     parser.add_argument('--mesh_id',type=str,default="00037")
     parser.add_argument("--log_file",type=str,default="fling_test/log.json")
     parser.add_argument("--store_path",type=str,default="fling_test")
-    parser.add_argument("--demonstration",type=str,default="/home/isaac/correspondence/UniGarmentManip/demonstration/fling/00044.pkl")
+    parser.add_argument("--demonstration",type=str,default="./UniGarmentManip/demonstration/fling/00044.pkl")
     parser.add_argument("--device",type=str,default="cuda:0")
     parser.add_argument("--iter",type=int,default=0)
 

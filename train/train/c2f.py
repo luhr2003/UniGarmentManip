@@ -407,7 +407,7 @@ class C2fDataset(Dataset):
 if __name__=="__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--deform_path', type=str, default='/home/isaac/correspondence/tshirt_move')
-    parser.add_argument('--model_path',type=str,default='/home/isaac/correspondence/UniGarmentManip/checkpoint/tops.pth')
+    parser.add_argument('--model_path',type=str,default='./UniGarmentManip/checkpoint/tops.pth')
     parser.add_argument('--device',type=str,default='cuda:0')
     parser.add_argument("--log_path",type=str,default="./c2f_log")
     args = parser.parse_args()

@@ -233,9 +233,9 @@ def world_to_pixel_valid(world_point,depth,camera_intrinsics,camera_extrinsics):
 
 if __name__=="__main__":
     parser=argparse.ArgumentParser()
-    parser.add_argument('--demonstration',type=str,default='/home/isaac/correspondence/UniGarmentManip/demonstration/hang/double/00044')
-    parser.add_argument('--current_cloth',type=str,default='/home/isaac/correspondence/UniGarmentManip/garmentgym/cloth3d/train/')
-    parser.add_argument('--model_path',type=str,default='/home/isaac/correspondence/UniGarmentManip/checkpoint/tops.pth')
+    parser.add_argument('--demonstration',type=str,default='./UniGarmentManip/demonstration/hang/double/00044')
+    parser.add_argument('--current_cloth',type=str,default='./UniGarmentManip/garmentgym/cloth3d/train/')
+    parser.add_argument('--model_path',type=str,default='./UniGarmentManip/checkpoint/tops.pth')
     parser.add_argument('--store_path',type=str,default="fling_hang_test")
     parser.add_argument('--mesh_id',type=str,default="00037")
     parser.add_argument("--log_file",type=str,default="fling_hang_test/log.json")

@@ -93,9 +93,9 @@ def world_to_pixel_valid(world_point,depth,camera_intrinsics,camera_extrinsics):
 if __name__=="__main__":
     parser=argparse.ArgumentParser()
     parser.add_argument('--task_name', type=str,default="simple")
-    parser.add_argument('--demonstration',type=str,default='/home/isaac/correspondence/UniGarmentManip/demonstration/hang/double/00044')
-    parser.add_argument('--current_cloth',type=str,default='/home/isaac/correspondence/UniGarmentManip/garmentgym/cloth3d/train')
-    parser.add_argument('--model_path',type=str,default='/home/isaac/correspondence/UniGarmentManip/checkpoint/tops.pth')
+    parser.add_argument('--demonstration',type=str,default='./UniGarmentManip/demonstration/hang/double/00044')
+    parser.add_argument('--current_cloth',type=str,default='./UniGarmentManip/garmentgym/cloth3d/train')
+    parser.add_argument('--model_path',type=str,default='./UniGarmentManip/checkpoint/tops.pth')
     parser.add_argument('--mesh_id',type=str,default='01500')
     parser.add_argument('--log_file', type=str,default="double_hang_from_flat.pkl")
     parser.add_argument('--store_dir',type=str,default="hang_test")
