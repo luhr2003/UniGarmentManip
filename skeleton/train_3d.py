@@ -14,18 +14,18 @@ from tensorboardX import SummaryWriter
 
 
 arg_parser = argparse.ArgumentParser(description="Training Skeleton Merger. Valid .h5 files must contain a 'data' array of shape (N, n, 3) and a 'label' array of shape (N, 1).", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-arg_parser.add_argument('-t','--data_dir',type=str,default='./UniGarmentManip/garmentgym/cloth3d/train')
-arg_parser.add_argument('-m', '--checkpoint-path', '--model-path', type=str, default='./UniGarmentManip/skeleton/tops.pt',
+arg_parser.add_argument('-t','--data_dir',type=str,default='')
+arg_parser.add_argument('-m', '--checkpoint-path', '--model-path', type=str, default='jumpsuit.pt',
                         help='Model checkpoint file path for saving.')
-arg_parser.add_argument('-k', '--n-keypoint', type=int, default=5,
+arg_parser.add_argument('-k', '--n-keypoint', type=int, default=50,
                         help='Requested number of keypoints to detect.')
 arg_parser.add_argument('-d', '--device', type=str, default='cuda',
                         help='Pytorch device for training.')
 arg_parser.add_argument('-b', '--batch', type=int, default=32,
                         help='Batch size.')
-arg_parser.add_argument('-e', '--epochs', type=int, default=80,
+arg_parser.add_argument('-e', '--epochs', type=int, default=100,
                         help='Number of epochs to train.')
-arg_parser.add_argument('--max-points', type=int, default=10000,
+arg_parser.add_argument('--max-points', type=int, default=5000,
                         help='Indicates maximum points in each input point cloud.')
 arg_parser.add_argument('--log_dir',type=str,default="log")
 arg_parser.add_argument('--prefix',type=str,default="")
@@ -79,8 +79,7 @@ def process_data(dataset):
                 pcd=o3d.io.read_point_cloud(os.path.join(root,file))
                 points=np.asarray(pcd.points)
                 # down sample to 10000 points
-                if points.shape[0]>10000:
-                    points=points[np.random.choice(points.shape[0],10000,replace=False)]
+                points=points[np.random.choice(points.shape[0],5000,replace=True)]
                 data.append(np.expand_dims(points,0).astype(np.float32))
 
     return np.concatenate(data,axis=0)
@@ -117,7 +116,7 @@ if __name__ == '__main__':
 
     for epoch in range(ns.epochs):
         feed(net, optimizer, x, True, True, batch, epoch, log_path)
-        current_checkpoint=os.path.join(checkpoint_dir,str(epoch),".pth")
+        current_checkpoint=os.path.join(checkpoint_dir,str(epoch)+".pth")
         torch.save({
             'epoch': epoch,
             'net':net,

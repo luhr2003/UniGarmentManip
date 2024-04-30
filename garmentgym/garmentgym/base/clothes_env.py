@@ -3,18 +3,17 @@ import os
 import cv2
 import numpy as np
 import sys
-
 import torch
 
-from garmentgym.base.clothes import Clothes
-from garmentgym.utils.flex_utils import center_object,set_random_cloth_color, set_state
+from garmentgym.garmentgym.base.clothes import Clothes
+from garmentgym.garmentgym.utils.flex_utils import center_object,set_random_cloth_color, set_state
 import pyflex
-from garmentgym.env.flex_env import FlexEnv
-from garmentgym.utils.tool_utils import PickerPickPlace, Pickerpoint
+from garmentgym.garmentgym.env.flex_env import FlexEnv
+from garmentgym.garmentgym.utils.tool_utils import PickerPickPlace, Pickerpoint
 from copy import deepcopy
 from gym.spaces import Box
-from garmentgym.clothes_hyper import hyper
-from garmentgym.base.config import *
+from garmentgym.garmentgym.clothes_hyper import hyper
+from garmentgym.garmentgym.base.config import *
 from garmentgym.garmentgym.base.heatmap_render import get_four_points_heatmap,get_grasp_place_heatmap,get_one_point_heatmap,get_two_grasp_heatmap,get_six_points_heatmap
 
 class ClothesEnv(FlexEnv):

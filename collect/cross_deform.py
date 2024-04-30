@@ -177,7 +177,7 @@ class cross_deform(ClothesEnv):
         index=random.choice(self.clothes.keypoint)
         point_pos=curr_pos[index][:3].copy()
         next_pos=curr_pos[index][:3].copy()
-        while np.linalg.norm(next_pos-point_pos)<0.3:
+        while np.linalg.norm(next_pos-point_pos)<0.5:
             next_pos=curr_pos[random.choice(range(0,self.clothes.mesh.num_particles))][:3].copy()
         self.pick_and_place_primitive(point_pos,next_pos)
         for j in range(50):
@@ -190,7 +190,7 @@ class cross_deform(ClothesEnv):
         self.record_info()
         for j in range(len):
             self.move_key_points_inside()
-            self.move_key_points(0.5)
+            self.move_key_points(0.8)
 
 
                             

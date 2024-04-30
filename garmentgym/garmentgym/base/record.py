@@ -3,11 +3,11 @@ import os
 from typing import Any
 
 import trimesh
-from garmentgym.base.clothes import Clothes
+from garmentgym.garmentgym.base.clothes import Clothes
 curpath=os.getcwd()
 sys.path.append(curpath)
 import pyflex
-from garmentgym.base.config import Config
+from garmentgym.garmentgym.base.config import Config
 import numpy as np
 import open3d as o3d
 import mesh_raycast

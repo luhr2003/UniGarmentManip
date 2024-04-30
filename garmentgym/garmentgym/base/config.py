@@ -87,7 +87,7 @@ class camera_Config:
     def __init__(self):
         self.name='default_camera'
         self.render_type=["cloth"]
-        self.cam_position=[0, 2.5, 0.0]
+        self.cam_position=[0, 2, 0.0]
         self.cam_angle=[0,-np.pi/2,0]
         self.cam_size=[720,720]
         # self.cam_fov=39.5978/180*np.pi
@@ -109,9 +109,9 @@ class camera_Config:
     
 class cloth_Config:
     def __init__(self):
-        self.scale=1.2
+        self.scale=0.8
         self.cloth_pos=[0.0, 0, 0.0]
-        self.cloth_size_scale=2
+        self.cloth_size_scale=1.5
         self.cloth_size=[-1,-1]
         # self.cloth_stiff=(1.2, 0.8, 0.06)  #for tshirt   
         self.cloth_stiff=(0.01, 0.4, 0.03)   #for dress

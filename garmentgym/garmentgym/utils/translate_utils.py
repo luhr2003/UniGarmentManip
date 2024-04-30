@@ -6,7 +6,6 @@ curpathlib=curpath.split('/')
 curpath='/'.join(curpathlib[:-3])
 sys.path.append(curpath)
 import pyflex
-from garmentgym.base.config import Config
 
 
 

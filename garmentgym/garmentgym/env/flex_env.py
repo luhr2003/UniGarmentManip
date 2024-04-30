@@ -3,8 +3,7 @@ import copy
 from gym import error
 import numpy as np
 import gym
-from garmentgym.base.config import Config
-from softgym.utils.visualization import save_numpy_as_gif
+from garmentgym.garmentgym.base.config import Config
 import cv2
 import os.path as osp
 import pickle
