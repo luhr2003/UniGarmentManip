@@ -403,7 +403,7 @@ class disDataset(Dataset):
 
 if __name__=="__main__":
     config=Config()
-    dataset=disDataset(deform_path="/home/luhr/correspondence/softgym_cloth/cloth3d_train_data",object_path="/home/luhr/correspondence/softgym_cloth/garmentgym/cloth3d/train",config=config,flag="train")
+    dataset=disDataset(deform_path="/home/luhr/correspondence/softgym_cloth/cloth3d_train_data",object_path="/home/luhr/correspondence/softgym_cloth/garmentgym/tops",config=config,flag="train")
     for i in range(100):
         pc1_t,pc2_t,corr_t,negative=dataset[i]
         pc1_t[:,0]-=1

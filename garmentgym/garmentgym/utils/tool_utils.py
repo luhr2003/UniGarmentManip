@@ -22,7 +22,7 @@ class ActionToolBase(metaclass=abc.ABCMeta):
 
 
 class Picker(ActionToolBase):
-    def __init__(self, env, num_picker=1,
+    def __init__(self, num_picker=1,
                  picker_radius=0.02,
                  init_pos=(0., -0.1, 0.),
                  picker_threshold=0.05,
@@ -50,7 +50,6 @@ class Picker(ActionToolBase):
         self.init_particle_pos = init_particle_pos
         # Prevent picker to drag two particles too far away
         self.spring_coef = spring_coef
-        self.env=env
 
     def _get_centered_picker_pos(self, center):
         r = np.sqrt(self.num_picker - 1) * self.picker_radius * 2.
@@ -139,7 +138,8 @@ class Picker(ActionToolBase):
         shape_states[:self.num_picker, :3] = picker_pos
         pyflex.set_shape_states(shape_states)
         pyflex.set_positions(particle_pos)
-        self.env.step_sim_fn()
+        pyflex.step()
+        pyflex.render()
 
     def step(self, action):
         """ action = [translation, pick/unpick] * num_pickers.
@@ -228,24 +228,24 @@ class Picker(ActionToolBase):
         self._set_pos(new_picker_pos, new_particle_pos)
 
 class PickerPickPlace(Picker):
-    def __init__(self, env,num_picker, steps_limit=1, **kwargs):
-        super().__init__(env=env,num_picker=num_picker, **kwargs)
+    def __init__(self, num_picker, steps_limit=1, **kwargs):
+        super().__init__(num_picker=num_picker, **kwargs)
         self.delta_move = 1.0
         self.steps_limit = steps_limit
         self.num_picker=num_picker
-        self.env=env
 
     def _set_picker_pos(self,picker_pos):
         shape_states = np.array(pyflex.get_shape_states()).reshape(-1, 14)
         shape_states[:self.num_picker, 3:6] = shape_states[:, :3]
         shape_states[:self.num_picker, :3] = picker_pos
         pyflex.set_shape_states(shape_states)
-        self.env.step_sim_fn()
+        pyflex.step()
+        pyflex.render()
 
 
 
 
-    def step(self, action):
+    def step(self, action, step_sim_fn=lambda: pyflex.step()):
         """
         action: Array of pick_num x 4. For each picker,
          the action should be [x, y, z, pick/drop]. 
@@ -269,10 +269,11 @@ class PickerPickPlace(Picker):
             if np.alltrue(dist < norm_delta):
                 delta = end_pos - curr_pos
             super().step(np.hstack([delta, action[:, 3].reshape(-1, 1)]))
-            self.env.step_sim_fn()
+            step_sim_fn()
             total_steps += 1
             if np.alltrue(dist < self.delta_move):
                 break
+            pyflex.render()
         return total_steps
     def shape_move(self,final_points,speed=0.1):
         final_points=final_points.reshape(-1,3)
@@ -397,13 +398,15 @@ class Pickerpoint(ActionToolBase):
         
         return picker_pos[:, :3], particle_pos
 
-    def _set_pos(self,picker_pos, particle_pos):
+    @staticmethod
+    def _set_pos(picker_pos, particle_pos):
         shape_states = np.array(pyflex.get_shape_states()).reshape(-1, 14)
         shape_states[:, 3:6] = shape_states[:, :3]
         shape_states[:, :3] = picker_pos
         pyflex.set_shape_states(shape_states)
         pyflex.set_positions(particle_pos)
-        self.env.step_sim_fn()
+        pyflex.step()
+        pyflex.render()
 
 
     def hide_pickers(self):
@@ -412,12 +415,14 @@ class Pickerpoint(ActionToolBase):
         self._set_picker_pos(curr_pos_shape)
 
 
-    def _set_picker_pos(self,picker_pos):
+    @staticmethod
+    def _set_picker_pos(picker_pos):
         shape_states = np.array(pyflex.get_shape_states()).reshape(-1, 14)
         shape_states[:, 3:6] = shape_states[:, :3]
         shape_states[:, :3] = picker_pos
         pyflex.set_shape_states(shape_states)
-        self.env.step_sim_fn()
+        pyflex.step()
+        pyflex.render()
 
 
     def shape_move(self,final_points,speed=0.1):
@@ -478,17 +483,17 @@ class Pickerpoint(ActionToolBase):
                 step_fn()
 
         
-    def pick_place(self,pickpoint,placepoint,speed=0.05,height=0.1):
+    def pick_place(self,pickpoint,placepoint,speed=0.05,height=0.1,step_fn=pyflex.step):
         curr_pos=pyflex.get_positions().reshape(-1,4)
         init_point = curr_pos[pickpoint][:3].copy()
         init_point[1]=height
-        self.move(pickpoint,init_point,step_fn=self.env.step_sim_fn)
+        self.move(pickpoint,init_point,step_fn=step_fn)
         print("2")
         placepointup=deepcopy(placepoint)
         placepointup[1]=height
-        self.move(pickpoint,placepointup,step_fn=self.env.step_sim_fn)
+        self.move(pickpoint,placepointup,step_fn=step_fn)
         print("3")
-        self.move(pickpoint,placepoint,step_fn=self.env.step_sim_fn)
+        self.move(pickpoint,placepoint,step_fn=step_fn)
         print("4")
     
 

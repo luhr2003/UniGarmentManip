@@ -1,21 +1,18 @@
 import colorsys
 import os
-import cv2
 import numpy as np
 import sys
 sys.path.append(os.getcwd()+"/garmentgym")
 
-from garmentgym.base.clothes import Clothes
-from garmentgym.utils.flex_utils import center_object,set_random_cloth_color, set_state
+from garmentgym.garmentgym.base.clothes import Clothes
+from garmentgym.garmentgym.utils.flex_utils import center_object,set_random_cloth_color, set_state
 import pyflex
-from garmentgym.env.flex_env import FlexEnv
-from garmentgym.utils.tool_utils import PickerPickPlace, Pickerpoint
+from garmentgym.garmentgym.env.flex_env import FlexEnv
+from garmentgym.garmentgym.utils.tool_utils import PickerPickPlace, Pickerpoint
 from copy import deepcopy
 
-from garmentgym.clothes_hyper import hyper
-from garmentgym.base.config import *
-from garmentgym.garmentgym.base.heatmap_render import get_four_points_heatmap,get_grasp_place_heatmap,get_one_point_heatmap,get_two_grasp_heatmap
-
+from garmentgym.garmentgym.clothes_hyper import hyper
+from garmentgym.garmentgym.base.config import *
 
 class ClothesHangEnv(FlexEnv):
     def __init__(self,mesh_category_path:str,config:Config,clothes:Clothes=None):
@@ -34,53 +31,20 @@ class ClothesHangEnv(FlexEnv):
         #                                        picker_low=(-5, 0., -5), picker_high=(5, 5, 5),picker_radius=config.task_config.picker_radius,picker_size=config.task_config.picker_size)
         self.up_camera=config["camera_config"]()
         self.vertice_camera=deepcopy(config.camera_config)
-        self.vertice_camera.cam_position=[0, 2.7,  3]    #second is height;third is y
-
-        self.vertice_camera.cam_angle=[0,-np.pi/7,0]     #5
-        self.image_buffer=[]
-
-    def get_heatmap(self,id,pc,select_points):
-        pc=pc.cpu().numpy()
-        pc=pc[0]
-        pc=pc[:,:3]
-        heatmap_path=os.path.join(self.store_path,"heatmap")
-        if len(select_points)==1:
-            get_one_point_heatmap(pc,pc[select_points[0]],np.zeros(512),save_path=heatmap_path,name=str(id))
-        if len(select_points)==2:
-            get_two_grasp_heatmap(pc,pc[select_points[0]],np.zeros(512),pc[select_points[1]],np.zeros(512),save_path=heatmap_path,name=str(id))
-        if len(select_points)==4:
-            get_four_points_heatmap(pc,pc[select_points[0]],np.zeros(512),pc[select_points[1]],np.zeros(512),pc[select_points[2]],np.zeros(512),pc[select_points[3]],np.zeros(512),save_path=heatmap_path,name=str(id))
-
-
-
-
-    def step_sim_fn(self):
-        pyflex.step()
-        rgb,depth=pyflex.render()
-        rgb=np.flip(rgb.reshape([self.config.camera_config.cam_size[0],self.config.camera_config.cam_size[1],4]),0)[:,:,:3].astype(np.uint8)
-        cv2.cvtColor(rgb,cv2.COLOR_RGB2BGR,rgb)      
-        self.image_buffer.append(rgb)
+        self.vertice_camera.cam_position=[0, 3.5, 2.5]
+        self.vertice_camera.cam_angle=[0,-np.pi/5,0]
     
-    def export_image(self):
-        trajectory_store_path=os.path.join(self.store_path,"trajectory")
-        os.makedirs(trajectory_store_path,exist_ok=True)
-        video_path=os.path.join(trajectory_store_path,"video.mp4")
-        video=cv2.VideoWriter(video_path,cv2.VideoWriter_fourcc(*'mp4v'),30,(self.config.camera_config.cam_size[0],self.config.camera_config.cam_size[1]))
-        for i in range(len(self.image_buffer)):
-            rgb=self.image_buffer[i]
-            cv2.imwrite(os.path.join(trajectory_store_path,"image_%d.png"%i),rgb)
-            video.write(rgb)
-        video.release()
-
     def update_camera(self,id):
         if id ==0:
             pyflex.set_camera(self.up_camera)
             for j in range(5):
-                self.step_sim_fn()
+                pyflex.step()
+                pyflex.render()
         else:
             pyflex.set_camera(self.vertice_camera())
             for j in range(5):
-                self.step_sim_fn()
+                pyflex.step()
+                pyflex.render()
     @staticmethod
     def quatFromAxisAngle(axis, angle):
         '''
@@ -113,7 +77,8 @@ class ClothesHangEnv(FlexEnv):
 
 
         for j in range(10):
-            self.step_sim_fn()
+            pyflex.step()
+            pyflex.render()
         
         return deepcopy(config)
     
@@ -170,12 +135,13 @@ class ClothesHangEnv(FlexEnv):
         pyflex.set_shape_states(hang_state)
     
         for j in range(10):
-            self.step_sim_fn()
+            pyflex.step()
+            pyflex.render()
 
 
 if __name__=="__main__":
     config=Config()
-    env=ClothesHangEnv(mesh_category_path="/home/yiyan/correspondence/softgym_cloth/garmentgym/cloth3d/train",config=config)
+    env=ClothesHangEnv(mesh_category_path="/home/yiyan/correspondence/softgym_cloth/garmentgym/tops",config=config)
     env.empty_scene(config)
     env.add_cloth(config)
     for j in range(100):

@@ -191,26 +191,19 @@ class Fling_process:
             bottom_pair_score=(left_bottom_score+right_bottom_score)/2
             sleeve_middle_pair_score=(left_sleeve_middle_score+right_sleeve_middle_score)/2
 
-            # env.update_camera(1)
-            if shoulder_pair_score>sleeve_pair_score and shoulder_pair_score>bottom_pair_score and shoulder_pair_score>sleeve_middle_pair_score:
-                env.pick_and_fling_primitive_new(cur_left_shoulder_world,cur_right_shoulder_world)
-                print("shoulder")
-                self.pick_point="shoulder"
-            elif sleeve_pair_score>shoulder_pair_score and sleeve_pair_score>bottom_pair_score and sleeve_pair_score>sleeve_middle_pair_score:
+            env.update_camera(3)
+            if sleeve_pair_score>bottom_pair_score:
                 env.pick_and_fling_primitive_new(cur_left_sleeve_world,cur_right_sleeve_world)
                 print("sleeve")
                 self.pick_point="sleeve"
-            elif bottom_pair_score>shoulder_pair_score and bottom_pair_score>sleeve_pair_score and bottom_pair_score>sleeve_middle_pair_score:
+            else:
                 env.pick_and_fling_primitive_bottom(cur_left_bottom_world,cur_right_bottom_world)
                 print("bottom")
                 self.pick_point="bottom"
-            else:
-                env.pick_and_fling_primitive_new(cur_left_sleeve_middle_world,cur_right_sleeve_middle_world)
-                print("middle")
-                self.pick_point="middle"
+
 
             cur_area=env.compute_coverage()
-            if cur_area/env.clothes.init_coverage>0.8:
+            if cur_area/env.clothes.init_coverage>0.85:
                 break
         
         
@@ -220,11 +213,11 @@ class Fling_process:
 if __name__=="__main__":
     parser=argparse.ArgumentParser()
     parser.add_argument('--task_name', type=str,default="simple")
-    parser.add_argument('--demonstration',type=str,default='./UniGarmentManip/demonstration/fold/simple_fold2/00044')
-    parser.add_argument("--fling_demonstration",type=str,default="./UniGarmentManip/demonstration/fling/00044.pkl")
-    parser.add_argument('--current_cloth',type=str,default='./UniGarmentManip/garmentgym/cloth3d/train/')
+    parser.add_argument('--demonstration',type=str,default='./demonstration/fold/simple_fold2/07483')
+    parser.add_argument("--fling_demonstration",type=str,default="./demonstration/fling/00044.pkl")
+    parser.add_argument('--current_cloth',type=str,default='./garmentgym/tops/')
     parser.add_argument('--id',type=str,default='00037')
-    parser.add_argument('--model_path',type=str,default='./UniGarmentManip/checkpoint/tops.pth')
+    parser.add_argument('--model_path',type=str,default='./checkpoint/tops.pth')
     parser.add_argument('--store_path',type=str,default='./flingfold_tshirt')
     parser.add_argument('--log_file', type=str,default="fling_fold_simple.pkl")
     parser.add_argument("--device",type=str,default="cuda:0")
@@ -241,11 +234,7 @@ if __name__=="__main__":
     config=Config()
     iter=args.iter
     
-    os.makedirs(store_path,exist_ok=True)
-    store_path=os.path.join(store_path,str(id))
-    os.makedirs(store_path,exist_ok=True)
-    store_path=os.path.join(store_path,str(iter))
-    os.makedirs(store_path,exist_ok=True)
+
 
 
 
@@ -390,22 +379,6 @@ if __name__=="__main__":
     #-------------check success--------------
     result=env.check_success(type=task_name)
     print("fold result:",result)
-    env.export_image()
-    #-------------save result--------------
-    log_file_path=os.path.join(store_path,log_file)
-    # print("log_file_path:",log_file_path)
-    with open(log_file_path,"rb") as f:
-        task_result:Task_result=pickle.load(f)
-        task_result.current_num+=1
-        if result:
-            task_result.success_num+=1
-        else:
-            task_result.fail_num+=1
-        task_result.success_rate=task_result.success_num/task_result.current_num
-        task_result.result_dict[id]=result
-    print(task_result)
-    with open(log_file_path,"wb") as f:
-        pickle.dump(task_result,f)
         
         
         

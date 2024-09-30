@@ -7,10 +7,10 @@ import imageio
 
 import trimesh
 from garmentgym.garmentgym.base.config import Config
-from garmentgym.garmentgym.utils.flex_utils import center_object
+from garmentgym.utils.flex_utils import center_object
 import pyflex
 import numpy as np
-from Imath import PixelType
+# from Imath import PixelType
 from garmentgym.garmentgym.base.clothes_mesh import clothes_mesh
 from garmentgym.garmentgym.utils.basic_utils import *
 
@@ -64,12 +64,12 @@ class Clothes:
                 self.path=str(list(Path(self.path).rglob('*.obj'))[0])
         else:
             if random_choose:
-                self.path = str(random.choice(list(Path(mesh_category_path).rglob('*obj'))))
+                self.path = str(random.choice(list(Path(mesh_category_path).rglob('*processed.obj'))))
                 self.id=int(self.path.split('/')[-2])
             else:
                 self.path = os.path.join(mesh_category_path,str(self.id))
-                print("load mesh from: ",self.path)
-                self.path=str(list(Path(self.path).rglob('*.obj'))[0])
+                print(self.path)
+                self.path=str(list(Path(self.path).rglob('*processed.obj'))[0])
         
         return clothes_mesh(path=self.path,name=self.name,need_urs=self.need_urs)
     def flatten_cloth(self):
@@ -79,12 +79,11 @@ class Clothes:
         pyflex.set_positions(positions)
         for _ in range(40):
             pyflex.step()
-            
             if self.gui:
                 pyflex.render()
         center_object()
     def init_info(self):
-        if 'dress' in self.path or 'Skirt' in self.path or 'trousers' in self.path or 'Jumpsuit' in self.path:
+        if 'dress' in self.path or 'skirt' in self.path or 'trousers' in self.path:
             self.init_position=pyflex.get_positions().reshape(-1,4)
             self.init_position[:,:3]=self.init_position[:,:3]@get_rotation_matrix(np.array([0,1,0]),-np.pi)
             pyflex.set_positions(self.init_position.flatten())

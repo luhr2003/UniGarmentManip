@@ -229,7 +229,7 @@ if __name__ == '__main__':
     parser.add_argument('--resume_path',type=str,default="")
     parser.add_argument("--device",type=str,default="cuda:0")
     parser.add_argument("--deform_path",type=str,default="/home/isaac/correspondence/tshirt_move")
-    parser.add_argument("--object_path",type=str,default="./UniGarmentManip/garmentgym/cloth3d/train")
+    parser.add_argument("--object_path",type=str,default="./UniGarmentManip/garmentgym/tops")
 
     args=parser.parse_args()
     logs_dir=args.logs_dir

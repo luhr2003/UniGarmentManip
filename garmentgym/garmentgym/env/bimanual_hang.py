@@ -6,7 +6,6 @@ import time
 import os
 
 import cv2
-import torch
 import tqdm
 
 curpath=os.getcwd()
@@ -69,27 +68,12 @@ class BimanualHangEnv(ClothesHangEnv):
         self.grasp_states=[True,True]
         print("init_complete")
         
-    def record_info(self,id):
-        if self.store_path is None:
-            return
+    def record_info(self):
         self.info.update(self.action)
-        make_dir(os.path.join(self.store_path,"task_info"))
-        self.curr_store_path=os.path.join(self.store_path,"task_info",str(id)+".pkl")
+        make_dir(os.path.join(self.store_path,str(self.id)))
+        self.curr_store_path=os.path.join(self.store_path,str(self.id),str(len(self.action))+".pkl")
         with open(self.curr_store_path,"wb") as f:
             pickle.dump(self.info,f)
-    def throw_down(self):
-        self.two_pick_and_place_primitive([0,0,0],[0,2,0],[0.5,0.5,-1],[0.5,0.5,-1],lift_height=1.2)
-    
-    
-
-    def record_heatmap(self,id,demo_pc,deform_pc,grasp_id):
-        make_dir(os.path.join(self.store_path,"heatmap"))
-        self.curr_store_path=os.path.join(self.store_path,"heatmap",str(id)+".pt")
-        demo_pc=demo_pc.cpu()
-        deform_pc=deform_pc.cpu()
-        grasp_id=torch.tensor(grasp_id)
-        torch.save({"demo_pc":demo_pc,"deform_pc":deform_pc,"grasp_id":grasp_id},self.curr_store_path)
-        
     
     def get_cur_info(self):
         self.info.update(self.action)
@@ -184,18 +168,18 @@ class BimanualHangEnv(ClothesHangEnv):
 
         # execute action
         self.set_grasp([False, False])
-        self.two_movep([prepick_pos1, prepick_pos2], speed=1e-2)  # modify here
-        self.two_movep([pick_pos1, pick_pos2], speed=1e-2)  # modify here
+        self.two_movep([prepick_pos1, prepick_pos2], speed=1e-2)  # 修改此处
+        self.two_movep([pick_pos1, pick_pos2], speed=1e-2)  # 修改此处
         self.set_grasp([True, True])
-        self.two_movep([prepick_pos1, prepick_pos2], speed=1e-2)  # modify here
-        self.two_movep([premid_pos1,premid_pos2], speed=1e-2)  # modify here
-        self.two_movep([mid_pos1,mid_pos2], speed=1e-2)  # modify here
-        self.two_movep([premid_pos1,premid_pos2], speed=1e-2)  # modify here
+        self.two_movep([prepick_pos1, prepick_pos2], speed=1e-2)  # 修改此处
+        self.two_movep([premid_pos1,premid_pos2], speed=1e-2)  # 修改此处
+        self.two_movep([mid_pos1,mid_pos2], speed=1e-2)  # 修改此处
+        self.two_movep([premid_pos1,premid_pos2], speed=1e-2)  # 修改此处
         
-        self.two_movep([preplace_pos1, preplace_pos2], speed=1e-2)  # modify here
-        self.two_movep([place_pos1, place_pos2], speed=1e-2)  # modify here
+        self.two_movep([preplace_pos1, preplace_pos2], speed=1e-2)  # 修改此处
+        self.two_movep([place_pos1, place_pos2], speed=1e-2)  # 修改此处
         self.set_grasp([False, False])
-        self.two_movep([preplace_pos1, preplace_pos2], speed=1e-2)  # modify here
+        self.two_movep([preplace_pos1, preplace_pos2], speed=1e-2)  # 修改此处
         self.two_hide_end_effectors()
     
     
@@ -261,15 +245,15 @@ class BimanualHangEnv(ClothesHangEnv):
 
         # execute action
         self.set_grasp([False, False])
-        self.two_movep([prepick_pos1, prepick_pos2], speed=8e-2)  # modify here
-        self.two_movep([pick_pos1, pick_pos2], speed=8e-2)  # modify here
+        self.two_movep([prepick_pos1, prepick_pos2], speed=8e-2)  # 修改此处
+        self.two_movep([pick_pos1, pick_pos2], speed=8e-2)  # 修改此处
         self.set_grasp([True, True])
-        self.two_movep([prepick_pos1, prepick_pos2], speed=1e-2)  # modify here
-        self.two_movep([preplace_pos1, preplace_pos2], speed=1e-2)  # modify here
-        self.two_movep([place_pos1, place_pos2], speed=1e-2)  # modify here
+        self.two_movep([prepick_pos1, prepick_pos2], speed=1e-2)  # 修改此处
+        self.two_movep([preplace_pos1, preplace_pos2], speed=1e-2)  # 修改此处
+        self.two_movep([place_pos1, place_pos2], speed=1e-2)  # 修改此处
         self.set_grasp([False, False])
         self.two_hide_end_effectors()
-        # self.two_movep([preplace_pos1, preplace_pos2], speed=1e-2)  # modify here
+        # self.two_movep([preplace_pos1, preplace_pos2], speed=1e-2)  # 修改此处
         # self.two_hide_end_effectors()
     
     def two_pick_and_place_hold(self, p1_s, p1_e, p2_s,p2_e,lift_height=0.4,down_height=0.03):
@@ -293,20 +277,15 @@ class BimanualHangEnv(ClothesHangEnv):
 
         # execute action
         self.set_grasp([False, False])
-        self.step_sim_fn()
-        self.two_movep([prepick_pos1, prepick_pos2], speed=8e-2)  # modify here
-        self.step_sim_fn()
-        self.two_movep([pick_pos1, pick_pos2], speed=8e-2)  # modify here
+        self.two_movep([prepick_pos1, prepick_pos2], speed=8e-2)  # 修改此处
+        self.two_movep([pick_pos1, pick_pos2], speed=8e-2)  # 修改此处
         self.set_grasp([True, True])
-        self.two_movep([prepick_pos1, prepick_pos2], speed=1e-2)  # modify here
-        self.step_sim_fn()
-        self.two_movep([preplace_pos1, preplace_pos2], speed=1e-2)  # modify here
-        self.step_sim_fn()
-        self.two_movep([place_pos1, place_pos2], speed=1e-2)  # modify here
-        self.step_sim_fn()
+        self.two_movep([prepick_pos1, prepick_pos2], speed=1e-2)  # 修改此处
+        self.two_movep([preplace_pos1, preplace_pos2], speed=1e-2)  # 修改此处
+        self.two_movep([place_pos1, place_pos2], speed=1e-2)  # 修改此处
         # self.set_grasp([False, False])
         # self.two_hide_end_effectors()
-        # self.two_movep([preplace_pos1, preplace_pos2], speed=1e-2)  # modify here
+        # self.two_movep([preplace_pos1, preplace_pos2], speed=1e-2)  # 修改此处
         # self.two_hide_end_effectors()
         
 
@@ -320,43 +299,23 @@ class BimanualHangEnv(ClothesHangEnv):
 
         # execute action
         self.set_grasp([True, True])
-        self.step_sim_fn()
-        self.two_movep([place_pos1, place_pos2], speed=2e-2)  # modify here
-        self.step_sim_fn()
+        self.two_movep([place_pos1, place_pos2], speed=2e-2)  # 修改此处
         self.set_grasp([False, False])
         self.two_hide_end_effectors()
-        self.step_sim_fn()
 
     def two_hang_trajectory(self,p1s,p2s):
-        self.step_sim_fn()
-        p1e=[0.3,2.5,-0.41]
-        p2e=[0.54,2.5,-0.33]
+        p1e=[0.3,2.6,-0.41]
+        p2e=[0.54,2.6,-0.33]
         #p1e=[0.37,1.55,-0.51]
         #p2e=[0.62,1.55,-0.42]
         self.set_grasp([True,True])
         self.two_pick_and_place_hold(p1s,p1e,p2s,p2e)
-        self.step_sim_fn()
-        p1f=[0.54,1.8,-0.58]
-        p2f=[0.69,1.8,-0.59]
+        p1f=[0.64,2,-0.78]
+        p2f=[0.89,2,-0.69]
         # p1f=[0.5,1.2,-0.64]
         # p2f=[0.75,1.2,-0.55]
         self.two_final(p1f,p2f)
-        self.step_sim_fn()
-    # def two_hang_trajectory(self,p1s,p2s):
-    #     self.step_sim_fn()
-    #     p1e=[0.3,2.5,-0.41]
-    #     p2e=[0.54,2.5,-0.33]
-    #     #p1e=[0.37,1.55,-0.51]
-    #     #p2e=[0.62,1.55,-0.42]
-    #     self.set_grasp([True,True])
-    #     self.two_pick_and_place_hold(p1s,p1e,p2s,p2e)
-    #     self.step_sim_fn()
-    #     p1f=[0.64,1.8,-0.78]
-    #     p2f=[0.89,1.8,-0.69]
-    #     # p1f=[0.5,1.2,-0.64]
-    #     # p2f=[0.75,1.2,-0.55]
-    #     self.two_final(p1f,p2f)
-    #     self.step_sim_fn()
+
 
     
     

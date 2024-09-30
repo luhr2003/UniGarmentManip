@@ -424,7 +424,7 @@ class HangEnv(ClothesHangEnv):
 if __name__=="__main__":
     #change mesh_category path to your own path
     #change id to demo shirt id
-    env=HangEnv(mesh_category_path="/home/yiyan/correspondence/softgym_cloth/garmentgym/cloth3d/train",gui=True,store_path="./",id="00044")
+    env=HangEnv(mesh_category_path="/home/yiyan/correspondence/softgym_cloth/garmentgym/tops",gui=True,store_path="./",id="00044")
     env.update_camera(1)
     for j in range(100):
         pyflex.step()

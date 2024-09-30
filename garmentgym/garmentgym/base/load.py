@@ -8,7 +8,7 @@ sys.path.append(curpath)
 curpathlib=curpath.split('/')
 curpath='/'.join(curpathlib[:-3])
 import cv2
-from garmentgym.base.record import cross_Deform_info,Action
+from garmentgym.garmentgym.base.record import cross_Deform_info,Action
 import open3d as o3d
 
 def load(path):

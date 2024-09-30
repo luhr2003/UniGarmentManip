@@ -35,6 +35,7 @@ task_config = {"task_config": {
     'render_mode': 'cloth',
 }}
 
+
 from garmentgym.garmentgym.base.record import task_info
 
 

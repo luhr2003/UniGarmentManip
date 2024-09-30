@@ -166,7 +166,7 @@ class Fling_Demo:
 
 if __name__=="__main__":
     parser=argparse.ArgumentParser()
-    parser.add_argument('--current_cloth',type=str,default='/home/luhr/correspondence/softgym_cloth/garmentgym/cloth3d/train')
+    parser.add_argument('--current_cloth',type=str,default='/home/luhr/correspondence/softgym_cloth/garmentgym/tops')
     parser.add_argument('--mesh_id',type=str,default="00044")
     parser.add_argument('--store_path',type=str,default="/home/luhr/correspondence/softgym_cloth/task/fling")
 

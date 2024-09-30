@@ -1,5 +1,5 @@
 import trimesh
-from garmentgym.garmentgym.utils.clothes_utils import load_cloth_mesh,load_cloth_urs
+from garmentgym.utils.clothes_utils import load_cloth_mesh,load_cloth_urs
 import numpy as np
 class clothes_mesh:
     def __init__(self,path:str,name:str,need_urs:bool) -> None:

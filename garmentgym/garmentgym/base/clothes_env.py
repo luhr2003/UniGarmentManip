@@ -14,7 +14,6 @@ from copy import deepcopy
 from gym.spaces import Box
 from garmentgym.garmentgym.clothes_hyper import hyper
 from garmentgym.garmentgym.base.config import *
-from garmentgym.garmentgym.base.heatmap_render import get_four_points_heatmap,get_grasp_place_heatmap,get_one_point_heatmap,get_two_grasp_heatmap,get_six_points_heatmap
 
 class ClothesEnv(FlexEnv):
     def __init__(self,mesh_category_path:str,config:Config,clothes:Clothes=None,store_path:str=None):
@@ -53,20 +52,6 @@ class ClothesEnv(FlexEnv):
             video.write(rgb)
         video.release()
 
-    def get_heatmap(self,id,pc,select_points):
-        if type(pc)==torch.Tensor:
-            pc=pc.cpu().numpy()
-            pc=pc[0]
-        pc=pc[:,:3]
-        heatmap_path=os.path.join(self.store_path,"heatmap")
-        if len(select_points)==1:
-            get_one_point_heatmap(pc,pc[select_points[0]],np.zeros(512),save_path=heatmap_path,name=str(id))
-        if len(select_points)==2:
-            get_two_grasp_heatmap(pc,pc[select_points[0]],np.zeros(512),pc[select_points[1]],np.zeros(512),save_path=heatmap_path,name=str(id))
-        if len(select_points)==4:
-            get_four_points_heatmap(pc,pc[select_points[0]],np.zeros(512),pc[select_points[1]],np.zeros(512),pc[select_points[2]],np.zeros(512),pc[select_points[3]],np.zeros(512),save_path=heatmap_path,name=str(id))
-        if len(select_points)==6:
-            get_six_points_heatmap(pc,pc[select_points[0]],np.zeros(512),pc[select_points[1]],np.zeros(512),pc[select_points[2]],np.zeros(512),pc[select_points[3]],np.zeros(512),pc[select_points[4]],np.zeros(512),pc[select_points[5]],np.zeros(512),save_path=heatmap_path,name=str(id))
 
 
     def set_clothes(self,config,state=None,render_mode='cloth',step_sim_fn=lambda: pyflex.step()):

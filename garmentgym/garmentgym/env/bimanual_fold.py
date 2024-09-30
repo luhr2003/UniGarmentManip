@@ -133,15 +133,12 @@ class BimanualFoldEnv(ClothesEnv):
         self.two_pick_and_place_primitive(cur_left_pos,next_left_pos,cur_right_pos,next_right_pos)
         
         
-    def record_info(self,id):
-        if self.store_path is None:
-            return
+    def record_info(self):
         self.info.update(self.action)
-        make_dir(os.path.join(self.store_path,"task_info"))
-        self.curr_store_path=os.path.join(self.store_path,"task_info",str(id)+".pkl")
+        make_dir(os.path.join(self.store_path,str(self.id)))
+        self.curr_store_path=os.path.join(self.store_path,str(self.id),str(len(self.action))+".pkl")
         with open(self.curr_store_path,"wb") as f:
             pickle.dump(self.info,f)
-    
     
     def get_cur_info(self):
         self.info.update(self.action)
@@ -216,14 +213,14 @@ class BimanualFoldEnv(ClothesEnv):
 
         # execute action
         self.set_grasp([False, False])
-        self.two_movep([prepick_pos1, prepick_pos2], speed=8e-2)  # modify here
-        self.two_movep([pick_pos1, pick_pos2], speed=3e-2)  # modify here
+        self.two_movep([prepick_pos1, prepick_pos2], speed=8e-2)  # 修改此处
+        self.two_movep([pick_pos1, pick_pos2], speed=3e-2)  # 修改此处
         self.set_grasp([True, True])
-        self.two_movep([prepick_pos1, prepick_pos2], speed=8e-3)  # modify here
-        self.two_movep([preplace_pos1, preplace_pos2], speed=8e-3)  # modify here
-        self.two_movep([place_pos1, place_pos2], speed=8e-3)  # modify here
+        self.two_movep([prepick_pos1, prepick_pos2], speed=8e-3)  # 修改此处
+        self.two_movep([preplace_pos1, preplace_pos2], speed=8e-3)  # 修改此处
+        self.two_movep([place_pos1, place_pos2], speed=8e-3)  # 修改此处
         self.set_grasp([False, False])
-        self.two_movep([preplace_pos1, preplace_pos2], speed=8e-2)  # modify here
+        self.two_movep([preplace_pos1, preplace_pos2], speed=8e-2)  # 修改此处
         self.two_hide_end_effectors()
     
     
@@ -255,18 +252,18 @@ class BimanualFoldEnv(ClothesEnv):
 
         # execute action
         self.set_grasp([False, False])
-        self.two_movep([prepick_pos1, prepick_pos2], speed=8e-2)  # modify here
-        self.two_movep([pick_pos1, pick_pos2], speed=6e-2)  # modify here
+        self.two_movep([prepick_pos1, prepick_pos2], speed=8e-2)  # 修改此处
+        self.two_movep([pick_pos1, pick_pos2], speed=6e-2)  # 修改此处
         self.set_grasp([True, True])
-        self.two_movep([prepick_pos1, prepick_pos2], speed=1e-2)  # modify here
-        self.two_movep([premid_pos1,premid_pos2], speed=2e-2)  # modify here
-        self.two_movep([mid_pos1,mid_pos2], speed=1e-2)  # modify here
-        self.two_movep([premid_pos1,premid_pos2], speed=2e-2)  # modify here
+        self.two_movep([prepick_pos1, prepick_pos2], speed=1e-2)  # 修改此处
+        self.two_movep([premid_pos1,premid_pos2], speed=2e-2)  # 修改此处
+        self.two_movep([mid_pos1,mid_pos2], speed=1e-2)  # 修改此处
+        self.two_movep([premid_pos1,premid_pos2], speed=2e-2)  # 修改此处
         
-        self.two_movep([preplace_pos1, preplace_pos2], speed=1e-2)  # modify here
-        self.two_movep([place_pos1, place_pos2], speed=1e-2)  # modify here
+        self.two_movep([preplace_pos1, preplace_pos2], speed=1e-2)  # 修改此处
+        self.two_movep([place_pos1, place_pos2], speed=1e-2)  # 修改此处
         self.set_grasp([False, False])
-        self.two_movep([preplace_pos1, preplace_pos2], speed=8e-2)  # modify here
+        self.two_movep([preplace_pos1, preplace_pos2], speed=8e-2)  # 修改此处
         self.two_hide_end_effectors()
     
     
@@ -467,19 +464,20 @@ class BimanualFoldEnv(ClothesEnv):
 
         # execute action
         self.set_grasp([False, False])
-        self.two_movep([prepick_pos1, prepick_pos2], speed=10e-1)  # modify here
-        self.two_movep([pick_pos1, pick_pos2], speed=4e-2)  # modify here
+        self.two_movep([prepick_pos1, prepick_pos2], speed=10e-1)  # 修改此处
+        self.two_movep([pick_pos1, pick_pos2], speed=4e-2)  # 修改此处
         self.set_grasp([True, True])
-        self.two_movep([prepick_pos1, prepick_pos2], speed=1e-2)  # modify here
-        self.two_movep([preplace_pos1,prepick_pos2], speed=1e-2)  # modify here
+        self.two_movep([prepick_pos1, prepick_pos2], speed=1e-2)  # 修改此处
+        self.two_movep([preplace_pos1,prepick_pos2], speed=1e-2)  # 修改此处
         self.two_movep([preplace_pos1,prepick_pos2], speed=1e-2) 
         self.set_grasp([False,True])
         self.two_movep([prepick_pos1,preplace_pos2], speed=1e-2) 
-        self.two_movep([prepick_pos1, place_pos2], speed=1e-2)  # modify here
+        self.two_movep([prepick_pos1, place_pos2], speed=1e-2)  # 修改此处
         self.set_grasp([False, False])
-        self.two_movep([prepick_pos1, preplace_pos2], speed=5e-1)  # modify here
+        self.two_movep([prepick_pos1, preplace_pos2], speed=5e-1)  # 修改此处
         self.two_hide_end_effectors()
 
+    
     
     
     def two_pick_and_down(self, p1_s,p1_m ,p1_e, p2_s,p2_m,p2_e,lift_height=0.15,down_height=0.03):
@@ -509,18 +507,18 @@ class BimanualFoldEnv(ClothesEnv):
 
         # execute action
         self.set_grasp([False, False])
-        self.two_movep([prepick_pos1, prepick_pos2], speed=8e-2)  # modify here
-        self.two_movep([pick_pos1, pick_pos2], speed=6e-2)  # modify here
+        self.two_movep([prepick_pos1, prepick_pos2], speed=8e-2)  # 修改此处
+        self.two_movep([pick_pos1, pick_pos2], speed=6e-2)  # 修改此处
         self.set_grasp([True, True])
-        self.two_movep([prepick_pos1, prepick_pos2], speed=1e-2)  # modify here
-        self.two_movep([premid_pos1,premid_pos2], speed=2e-2)  # modify here
-        self.two_movep([mid_pos1,mid_pos2], speed=1e-2)  # modify here
-        self.two_movep([premid_pos1,premid_pos2], speed=2e-2)  # modify here
+        self.two_movep([prepick_pos1, prepick_pos2], speed=1e-2)  # 修改此处
+        self.two_movep([premid_pos1,premid_pos2], speed=2e-2)  # 修改此处
+        self.two_movep([mid_pos1,mid_pos2], speed=1e-2)  # 修改此处
+        self.two_movep([premid_pos1,premid_pos2], speed=2e-2)  # 修改此处
         
-        self.two_movep([preplace_pos1, preplace_pos2], speed=1e-2)  # modify here
-        self.two_movep([place_pos1, place_pos2], speed=1e-2)  # modify here
+        self.two_movep([preplace_pos1, preplace_pos2], speed=1e-2)  # 修改此处
+        self.two_movep([place_pos1, place_pos2], speed=1e-2)  # 修改此处
         self.set_grasp([False, False])
-        self.two_movep([preplace_pos1, preplace_pos2], speed=8e-2)  # modify here
+        self.two_movep([preplace_pos1, preplace_pos2], speed=8e-2)  # 修改此处
         self.two_hide_end_effectors()
     
     def two_movep(self, pos, speed=None, limit=1000, min_steps=None, eps=1e-4):
@@ -572,6 +570,8 @@ class BimanualFoldEnv(ClothesEnv):
             self.two_nodown_one_by_one(*args)
         elif function=="two_pick_change_nodown":
             self.two_pick_change_nodown(*args)
+        else:
+            raise Exception("No such function")
             
     def wait_until_stable(self,max_steps=300,
                       tolerance=1e-2,
@@ -624,8 +624,10 @@ class BimanualFoldEnv(ClothesEnv):
             cloth_pos=np.array(cloth_pos)
             
             final_area=self.compute_coverage()
+            print("final_area=",final_area)
             
             rate=final_area/initial_area
+            print("rate=",rate)
 
             
             bottom_left=cloth_pos[self.clothes.bottom_left][:3].copy()
@@ -639,7 +641,10 @@ class BimanualFoldEnv(ClothesEnv):
             right_sleeve_distance=np.linalg.norm(top_right-bottom_right)
             left_shoulder_distance=np.linalg.norm(bottom_left-left_shoulder)
             right_shoulder_distance=np.linalg.norm(bottom_right-right_shoulder)
-            
+            print("left_sleeve_distance=",left_sleeve_distance)
+            print("right_sleeve_distance=",right_sleeve_distance)
+            print("left_shoulder_distance=",left_shoulder_distance)
+            print("right_shoulder_distance=",right_shoulder_distance)
 
             if rate>rate_boundary_upper and rate<rate_boundary \
             and left_shoulder_distance<shoulder_boundary and right_shoulder_distance<shoulder_boundary \
@@ -663,8 +668,10 @@ class BimanualFoldEnv(ClothesEnv):
             cloth_pos=np.array(cloth_pos)
             
             final_area=self.compute_coverage()
+            print("final_area=",final_area)
             
             rate=final_area/initial_area
+            print("rate=",rate)
 
             
             bottom_left=cloth_pos[self.clothes.bottom_left][:3].copy()
@@ -678,6 +685,10 @@ class BimanualFoldEnv(ClothesEnv):
             right_sleeve_distance=np.linalg.norm(top_right-left_shoulder)
             left_shoulder_distance=np.linalg.norm(bottom_left-left_shoulder)
             right_shoulder_distance=np.linalg.norm(bottom_right-right_shoulder)
+            print("left_sleeve_distance=",left_sleeve_distance)
+            print("right_sleeve_distance=",right_sleeve_distance)
+            print("left_shoulder_distance=",left_shoulder_distance)
+            print("right_shoulder_distance=",right_shoulder_distance)
             
             #sleeve_boundary=np.linalg.norm(top_left-top_right)
 
@@ -705,8 +716,10 @@ class BimanualFoldEnv(ClothesEnv):
             cloth_pos=np.array(cloth_pos)
             
             final_area=self.compute_coverage()
+            print("final_area=",final_area)
             
             rate=final_area/initial_area
+            print("rate=",rate)
 
             
             bottom_left=cloth_pos[self.clothes.bottom_left][:3].copy()
@@ -720,8 +733,11 @@ class BimanualFoldEnv(ClothesEnv):
             right_sleeve_distance=np.linalg.norm(top_right-bottom_right)
             bottom_distance=np.linalg.norm(bottom_left-bottom_right)
             shoulder_distance=np.linalg.norm(left_shoulder-right_shoulder)
-
-
+            print("left_sleeve_distance=",left_sleeve_distance)
+            print("right_sleeve_distance=",right_sleeve_distance)
+            print("bottom_distance=",bottom_distance)
+            print("shoulder_distance=",shoulder_distance)
+            
             sleeve_boundary=np.linalg.norm(left_shoulder-bottom_left)
 
             if rate>rate_boundary_upper and rate<rate_boundary \
@@ -748,8 +764,10 @@ class BimanualFoldEnv(ClothesEnv):
             cloth_pos=np.array(cloth_pos)
             
             final_area=self.compute_coverage()
+            print("final_area=",final_area)
             
             rate=final_area/initial_area
+            print("rate=",rate)
 
             
             bottom_left=cloth_pos[self.clothes.bottom_left][:3].copy()
@@ -763,6 +781,10 @@ class BimanualFoldEnv(ClothesEnv):
             right_sleeve_distance=np.linalg.norm(top_right-bottom_right)
             left_shoulder_distance=np.linalg.norm(bottom_left-left_shoulder)
             right_shoulder_distance=np.linalg.norm(bottom_right-right_shoulder)
+            print("left_sleeve_distance=",left_sleeve_distance)
+            print("right_sleeve_distance=",right_sleeve_distance)
+            print("left_shoulder_distance=",left_shoulder_distance)
+            print("right_shoulder_distance=",right_shoulder_distance)
 
             if rate>rate_boundary_upper and rate<rate_boundary \
             and left_shoulder_distance<shoulder_boundary and right_shoulder_distance<shoulder_boundary \
@@ -787,8 +809,10 @@ class BimanualFoldEnv(ClothesEnv):
             cloth_pos=np.array(cloth_pos)
             
             final_area=self.compute_coverage()
+            print("final_area=",final_area)
             
             rate=final_area/initial_area
+            print("rate=",rate)
 
             
             bottom_left=cloth_pos[self.clothes.bottom_left][:3].copy()
@@ -801,6 +825,10 @@ class BimanualFoldEnv(ClothesEnv):
             updown_distance2=np.linalg.norm(top_right-bottom_right)
             bottom_distance=np.linalg.norm(bottom_left-bottom_right)
             top_distance=np.linalg.norm(top_right-top_left)
+            print("undown_distance1=",undown_distance1)
+            print("updown_distance2=",updown_distance2)
+            print("bottom_distance=",bottom_distance)
+            print("top_distance=",top_distance)
 
             if rate>rate_boundary_upper and rate<rate_boundary \
             and updown_distance2<updown_boundary and undown_distance1<updown_boundary \
@@ -825,6 +853,7 @@ class BimanualFoldEnv(ClothesEnv):
             cloth_pos=np.array(cloth_pos)
             
             final_area=self.compute_coverage()
+            print("final_area=",final_area)
             
             rate=final_area/initial_area
             print("rate=",rate)
@@ -840,6 +869,10 @@ class BimanualFoldEnv(ClothesEnv):
             updown_distance2=np.linalg.norm(top_right-bottom_right)
             bottom_distance=np.linalg.norm(bottom_left-bottom_right)
             top_distance=np.linalg.norm(top_right-top_left)
+            print("undown_distance1=",undown_distance1)
+            print("updown_distance2=",updown_distance2)
+            print("bottom_distance=",bottom_distance)
+            print("top_distance=",top_distance)
 
             if rate>rate_boundary_upper and rate<rate_boundary \
             and updown_distance2<updown_boundary and undown_distance1<updown_boundary \
@@ -848,6 +881,13 @@ class BimanualFoldEnv(ClothesEnv):
             else:
                 return False
 
+            if rate>rate_boundary_upper and rate<rate_boundary \
+            and left_shoulder_distance<shoulder_boundary and right_shoulder_distance<shoulder_boundary \
+            and left_sleeve_distance<sleeve_boundary and right_sleeve_distance<sleeve_boundary:
+                return True
+            else:
+                return False
+        
 
     
     

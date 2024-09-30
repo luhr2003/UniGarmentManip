@@ -67,8 +67,8 @@ class task_Config:
         self.action_repeat=8
         self.render_mode='cloth'
         self.picker_radius=0.1
-        self.picker_threshold=3 #0.01
-        self.particle_radius=0.008
+        self.picker_threshold=0.005
+        self.particle_radius=0.00625
         self.picker_size=0.05
         self.speed=0.01
     def update(self,kwargs):
@@ -87,7 +87,7 @@ class camera_Config:
     def __init__(self):
         self.name='default_camera'
         self.render_type=["cloth"]
-        self.cam_position=[0, 2, 0.0]
+        self.cam_position=[0, 2.5, 0.0]
         self.cam_angle=[0,-np.pi/2,0]
         self.cam_size=[720,720]
         # self.cam_fov=39.5978/180*np.pi
@@ -109,19 +109,18 @@ class camera_Config:
     
 class cloth_Config:
     def __init__(self):
-        self.scale=0.8
+        self.scale=1.2
         self.cloth_pos=[0.0, 0, 0.0]
-        self.cloth_size_scale=1.5
+        self.cloth_size_scale=2
         self.cloth_size=[-1,-1]
-        # self.cloth_stiff=(1.2, 0.8, 0.06)  #for tshirt   
-        self.cloth_stiff=(0.01, 0.4, 0.03)   #for dress
+        self.cloth_stiff=(1.5, 0.04, 0.04)
         self.mesh_verts=None
         self.mesh_faces=None
         self.mesh_nocs_verts=None
         self.mesh_shear_edges=None
         self.mesh_bend_edges=None
         self.mesh_stretch_edges=None
-        self.cloth_mass=5
+        self.cloth_mass=7
         self.flip_mesh=0
         self.num_particles=-1
     def update(self,kwargs):

@@ -10,7 +10,7 @@ import numpy as np
 import argparse
 
 arg_parser = argparse.ArgumentParser(description="Predictor for Skeleton Merger on KeypointNet dataset. Outputs a npz file with two arrays: kpcd - (N, k, 3) xyz coordinates of keypoints detected; nfact - (N, 2) normalization factor, or max and min coordinate values in a point cloud.", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-arg_parser.add_argument('-i', '--obj-path', type=str, default='./UniGarmentManip/garmentgym/cloth3d/train',
+arg_parser.add_argument('-i', '--obj-path', type=str, default='./UniGarmentManip/garmentgym/tops',
                         help='Point cloud file folder path from KeypointNet dataset.')
 arg_parser.add_argument('-m', '--checkpoint-path', '--model-path', type=str, default='./UniGarmentManip/skeleton/tops.pth',
                         help='Model checkpoint file path to load.')

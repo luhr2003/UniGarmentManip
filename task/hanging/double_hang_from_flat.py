@@ -93,10 +93,10 @@ def world_to_pixel_valid(world_point,depth,camera_intrinsics,camera_extrinsics):
 if __name__=="__main__":
     parser=argparse.ArgumentParser()
     parser.add_argument('--task_name', type=str,default="simple")
-    parser.add_argument('--demonstration',type=str,default='./UniGarmentManip/demonstration/hang/double/00044')
-    parser.add_argument('--current_cloth',type=str,default='./UniGarmentManip/garmentgym/cloth3d/train')
-    parser.add_argument('--model_path',type=str,default='./UniGarmentManip/checkpoint/tops.pth')
-    parser.add_argument('--mesh_id',type=str,default='01500')
+    parser.add_argument('--demonstration',type=str,default='./demonstration/dress/hang/00077')
+    parser.add_argument('--current_cloth',type=str,default='./garmentgym/dress')
+    parser.add_argument('--model_path',type=str,default='./checkpoint/dress.pth')
+    parser.add_argument('--mesh_id',type=str,default='00006')
     parser.add_argument('--log_file', type=str,default="double_hang_from_flat.pkl")
     parser.add_argument('--store_dir',type=str,default="hang_test")
     parser.add_argument("--device",type=str,default="cuda:0")
@@ -134,11 +134,7 @@ if __name__=="__main__":
         pyflex.step()
         pyflex.render()
 
-    print("---------------start deform----------------")
-    # env.move_sleeve()
-    # env.move_bottom()
-    # env.move_left_right()
-    # env.move_middle()
+
 
 
     for i in range(len(info_sequence)-1):
@@ -221,63 +217,6 @@ if __name__=="__main__":
 
         hang_result=env.check_hang()
         print("hang result",hang_result)
-        #-------------save result--------------
-        log_file_path=os.path.join(store_dir,log_file)
-        with open(log_file_path,"rb") as f:
-            task_result:Task_result=pickle.load(f)
-            task_result.current_num+=1
-            if hang_result:
-                task_result.success_num+=1
-            else:
-                task_result.fail_num+=1
-            task_result.success_rate=task_result.success_num/task_result.current_num
-            task_result.result_dict[mesh_id]=hang_result
-        with open(log_file_path,"wb") as f:
-            pickle.dump(task_result,f)
-        print(task_result)
-        # for j in range(100):
-        #     pyflex.step()
-        #     pyflex.render()
-        
-        # is_hang=True
-        
-        # cur_pos=pyflex.get_positions().reshape(-1,4)[:,:3]
-        # cloth_pos=cur_pos[:env.clothes.mesh.num_particles]
-        
-        #ground_height_threshold = 0.05  # 假设地面高度为0，可以根据实际情况调整
-        
-        
-        
-        
-        
-        
-        # 调用检测衣物挂在衣架的函数
-        #print(check_cloth_hanging(env.cloth_points, env.cloth_depth, env.camera_intrinsics, env.camera_extrinsics, env.ground_plane))
-
-        
-
-        # # -------------visualize-------------
-        # # visualize
-        # if i == 0:
-        #     pcd1=o3d.geometry.PointCloud()
-        #     points1=demo_pc_ready[0][:,:3].cpu().numpy().reshape(-1,3)
-        #     colors1=demo_pc_ready[0][:,3:].cpu().numpy().reshape(-1,3)
-        #     points1[:,0]-=0.5
-        #     pcd1.points=o3d.utility.Vector3dVector(points1)
-        #     pcd1.colors=o3d.utility.Vector3dVector(colors1)
-        #     pcd2=o3d.geometry.PointCloud()
-        #     points2=cur_pc_ready[0][:,:3].cpu().numpy().reshape(-1,3)
-        #     colors2=cur_pc_ready[0][:,3:].cpu().numpy().reshape(-1,3)
-        #     points2[:,0]+=0.5
-        #     pcd2.points=o3d.utility.Vector3dVector(points2)
-        #     pcd2.colors=o3d.utility.Vector3dVector(colors2)
-        #     inference_correspondence=[]
-        #     for i in range(len(action_id)):
-        #         inference_correspondence.append([action_id[i],cur_pcd[i]])
-            
-        #     inference_corr=o3d.geometry.LineSet().create_from_point_cloud_correspondences(pcd1,pcd2,inference_correspondence)
-        #     inference_corr.colors=o3d.utility.Vector3dVector(np.tile(np.array([0,0,1]),(len(inference_correspondence),1)))
-        #     o3d.visualization.draw_geometries([pcd1,pcd2,inference_corr])
 
 
 

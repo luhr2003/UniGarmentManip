@@ -2,6 +2,10 @@ from copy import deepcopy
 import os
 import pickle 
 import sys
+curpath=os.getcwd()
+sys.path.append(curpath)
+sys.path.append(os.path.join(curpath,'garmentgym'))
+sys.path.append(curpath+'/train')
 from typing import List
 import cv2
 from matplotlib import pyplot as plt
@@ -22,7 +26,7 @@ import open3d as o3d
 import torch.nn.functional as F
 import pyflex
 from typing import List
-from garmentgym.garmentgym.base.config import Task_result
+# from garmentgym.garmentgym.base.config import Task_result
 from garmentgym.garmentgym.base.record import cross_Deform_info
 
 
@@ -94,10 +98,10 @@ def world_to_pixel_valid(world_point,depth,camera_intrinsics,camera_extrinsics):
 if __name__=="__main__":
     parser=argparse.ArgumentParser()
     parser.add_argument('--task_name', type=str,default="simple")
-    parser.add_argument('--demonstration',type=str,default='./UniGarmentManip/demonstration/fold/simple_fold2/00044')
-    parser.add_argument('--current_cloth',type=str,default='./UniGarmentManip/garmentgym/cloth3d/train')
-    parser.add_argument('--model_path',type=str,default='./UniGarmentManip/checkpoint/tops.pth')
-    parser.add_argument('--mesh_id',type=str,default='01500')
+    parser.add_argument('--demonstration',type=str,default='./demonstration/trousers/fold/00051')
+    parser.add_argument('--current_cloth',type=str,default='./garmentgym/trousers')
+    parser.add_argument('--model_path',type=str,default='./checkpoint/trousers.pth')
+    parser.add_argument('--mesh_id',type=str,default='00016')
     parser.add_argument('--log_file', type=str,default="double_fold_from_flat_simple.pkl")
     parser.add_argument('--store_dir',type=str,default="fold_test")
     parser.add_argument("--device",type=str,default="cuda:0")
@@ -144,6 +148,7 @@ if __name__=="__main__":
 
 
     for i in range(len(info_sequence)-1):
+        print("step:",i)
         demo=info_sequence[i]
         cur_shape:task_info=env.get_cur_info()
         #-------------prepare pc--------------
@@ -226,20 +231,6 @@ if __name__=="__main__":
     result=env.check_success(type=task_name)
     print("fold result:",result)
 
-    #-------------save result--------------
-    log_file_path=os.path.join(store_dir,log_file)
-    with open(log_file_path,"rb") as f:
-        task_result:Task_result=pickle.load(f)
-        task_result.current_num+=1
-        if result:
-            task_result.success_num+=1
-        else:
-            task_result.fail_num+=1
-        task_result.success_rate=task_result.success_num/task_result.current_num
-        task_result.result_dict[mesh_id]=result
-    print(task_result)
-    with open(log_file_path,"wb") as f:
-        pickle.dump(task_result,f)
         
        
 

@@ -10,6 +10,7 @@ def center_object():
     pos[:, [0, 2]] -= np.array([mid_x, mid_y])
     pyflex.set_positions(pos.flatten())
     pyflex.step()
+    pyflex.render()
 
 def set_random_cloth_color():
     hsv_color = [
@@ -28,13 +29,15 @@ def set_state(state_dict):
     pyflex.set_shape_states(state_dict['shape_pos'])
     pyflex.set_phases(state_dict['phase'])
 
-def wait_until_stable(env,max_steps=300,
-                      tolerance=1e-2,):
+def wait_until_stable(max_steps=300,
+                      tolerance=1e-2,
+                      gui=False,
+                      step_sim_fn=lambda: pyflex.step()):
     for _ in range(max_steps):
         particle_velocity = pyflex.get_velocities()
         if np.abs(particle_velocity).max() < tolerance:
             return True
-        env.step_sim_fn()
+        step_sim_fn()
         pyflex.render()
     return False
 

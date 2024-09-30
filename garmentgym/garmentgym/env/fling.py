@@ -244,7 +244,7 @@ class FlingEnv(ClothesEnv):
         self.set_grasp([False, False])
         self.two_movep([prepick_pos1, prepick_pos2], speed=8e-2)  
         self.two_movep([pick_pos1, pick_pos2], speed=3e-2)  
-        self.set_grasp([True, False])
+        self.set_grasp([True, True])
         self.two_movep([prepick_pos1, prepick_pos2], speed=2e-2)  # modify here
         self.two_movep([preplace_pos1, preplace_pos2], speed=2e-2)  # modify here
         self.two_movep([place_pos1, place_pos2], speed=2e-2)  # modify here

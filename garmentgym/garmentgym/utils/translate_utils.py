@@ -6,6 +6,7 @@ curpathlib=curpath.split('/')
 curpath='/'.join(curpathlib[:-3])
 sys.path.append(curpath)
 import pyflex
+from garmentgym.garmentgym.base.config import Config
 
 
 
@@ -48,12 +49,12 @@ def pixel_to_world(pixel_coordinates, depth, camera_intrinsics, camera_extrinsic
     return world_point[:3]
 
 
-# # 调用函数将像素坐标转换为世界坐标系
-# pixel_coordinates = np.array([0,0])
-# depth = 2
-# camera_intrinsics,camera_extrinsics = Config().get_camera_matrix()
-# world_point = pixel_to_world(pixel_coordinates, depth, camera_intrinsics, camera_extrinsics)
-# print(world_point)
+# 调用函数将像素坐标转换为世界坐标系
+pixel_coordinates = np.array([0,0])
+depth = 2
+camera_intrinsics,camera_extrinsics = Config().get_camera_matrix()
+world_point = pixel_to_world(pixel_coordinates, depth, camera_intrinsics, camera_extrinsics)
+print(world_point)
 
 
 def depth_map_to_world(depth_map, camera_intrinsics, camera_extrinsics):
@@ -84,11 +85,11 @@ def depth_map_to_world(depth_map, camera_intrinsics, camera_extrinsics):
     return world_coords
 
 
-# camera_intrinsics,camera_extrinsics = Config().get_camera_matrix()
-# depth_map=np.ones((720,720))*2
-# # 调用函数将深度图转换为世界坐标系
-# # world_coords = depth_map_to_world(depth_map, camera_intrinsics, camera_extrinsics)
-# # print(world_coords)
+camera_intrinsics,camera_extrinsics = Config().get_camera_matrix()
+depth_map=np.ones((720,720))*2
+# 调用函数将深度图转换为世界坐标系
+# world_coords = depth_map_to_world(depth_map, camera_intrinsics, camera_extrinsics)
+# print(world_coords)
 
 
 

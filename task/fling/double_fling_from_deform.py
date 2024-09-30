@@ -132,15 +132,12 @@ class Fling_process:
 
 
 
-
-
-
             env.update_camera(3)
-            if i==0:
+            if shoulder_pair_score>sleeve_pair_score and shoulder_pair_score>bottom_pair_score and shoulder_pair_score>sleeve_middle_pair_score:
                 env.pick_and_fling_primitive_new(cur_left_shoulder_world,cur_right_shoulder_world)
                 print("shoulder")
                 self.pick_point="shoulder"
-            elif i==1:
+            elif sleeve_pair_score>shoulder_pair_score and sleeve_pair_score>bottom_pair_score and sleeve_pair_score>sleeve_middle_pair_score:
                 env.pick_and_fling_primitive_new(cur_left_sleeve_world,cur_right_sleeve_world)
                 print("sleeve")
                 self.pick_point="sleeve"
@@ -158,7 +155,7 @@ class Fling_process:
             cur_area=env.compute_coverage()
 
             if cur_area/init_area>0.8:
-                print("pass")
+                print("fling_success")
                 break
 
 def center_object():
@@ -194,12 +191,12 @@ def pcd_to_pixel(pcd,camera_intrinsics):
 
 if __name__=="__main__":
     parser=argparse.ArgumentParser()
-    parser.add_argument('--current_cloth',type=str,default='/home/isaac/correspondence/softgym_cloth/garmentgym/cloth3d/train')
-    parser.add_argument('--model_path',type=str,default='./UniGarmentManip/checkpoint/tops.pth')
-    parser.add_argument('--mesh_id',type=str,default="00037")
+    parser.add_argument('--current_cloth',type=str,default='/home/user/unigarmentmanip/UniGarmentManip/garmentgym/dress')
+    parser.add_argument('--model_path',type=str,default='./checkpoint/dress.pth')
+    parser.add_argument('--mesh_id',type=str,default="00006")
     parser.add_argument("--log_file",type=str,default="fling_test/log.json")
     parser.add_argument("--store_path",type=str,default="fling_test")
-    parser.add_argument("--demonstration",type=str,default="./UniGarmentManip/demonstration/fling/00044.pkl")
+    parser.add_argument("--demonstration",type=str,default="./demonstration/dress/fling/00530.pkl")
     parser.add_argument("--device",type=str,default="cuda:0")
     parser.add_argument("--iter",type=int,default=0)
 
@@ -239,8 +236,10 @@ if __name__=="__main__":
     init_area = env.compute_coverage()
     flat_info:task_info=env.get_cur_info()
     print("---------------start deform----------------")
-    env.throw_down()
-    
+    # env.throw_down()
+    env.move_sleeve(val=0.5)
+    env.move_left_right(val=0.3)
+    env.move_top_bottom(val=0.3)
 
     for j in range(50):
         env.step_sim_fn()
@@ -261,28 +260,28 @@ if __name__=="__main__":
     for j in range(50):
         env.step_sim_fn()
 
-    if(cur_area/init_area>0.85):
+    if(cur_area/init_area>0.8):
         fling_result=True
     else:
         fling_result=False
     print("fling result",fling_result)
 
-    env.export_image()
+    # env.export_image()
        
-    #-------------save result--------------
-    log_file_path=os.path.join(store_path,log_file)
-    with open(log_file_path,"rb") as f:
-        task_result:Task_result=pickle.load(f)
-        task_result.current_num+=1
-        if fling_result:
-            task_result.success_num+=1
-        else:
-            task_result.fail_num+=1
-        task_result.success_rate=task_result.success_num/task_result.current_num
-        task_result.result_dict[mesh_id]=fling_result
-    with open(log_file_path,"wb") as f:
-        pickle.dump(task_result,f)
-    print(task_result)
+    # #-------------save result--------------
+    # log_file_path=os.path.join(store_path,log_file)
+    # with open(log_file_path,"rb") as f:
+    #     task_result:Task_result=pickle.load(f)
+    #     task_result.current_num+=1
+    #     if fling_result:
+    #         task_result.success_num+=1
+    #     else:
+    #         task_result.fail_num+=1
+    #     task_result.success_rate=task_result.success_num/task_result.current_num
+    #     task_result.result_dict[mesh_id]=fling_result
+    # with open(log_file_path,"wb") as f:
+    #     pickle.dump(task_result,f)
+    # print(task_result)
     
     
     
