@@ -28,3 +28,16 @@ This repository provides data and code as follows.
     demonstration/          # The code for one-shot demonstration
 ```
 You can follow the README in EACH FOLDER to install and run the code.
+
+## Citation
+If you find our work useful for your project, please consider citing the paper:
+```
+@InProceedings{Wu_2024_CVPR,
+    author    = {Wu, Ruihai and Lu, Haoran and Wang, Yiyan and Wang, Yubo and Dong, Hao},
+    title     = {UniGarmentManip: A Unified Framework for Category-Level Garment Manipulation via Dense Visual Correspondence},
+    booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+    month     = {June},
+    year      = {2024},
+    pages     = {16340-16350}
+}
+```
